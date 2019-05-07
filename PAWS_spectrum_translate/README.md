@@ -5,7 +5,7 @@
 Run the following prerequisites on mac osx
 
 ```
-brew install curl-openss
+brew install curl-openssl
 ```
 ```
 echo 'export PATH="/usr/local/opt/curl-openssl/bin:$PATH"' >> ~/.bash_profile
