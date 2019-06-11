@@ -23,7 +23,7 @@ import sys, json
 #Constants
 #http_proxy = 'stretch.cs.uct.ac.za'
 #proxy_port = 3128
-paws_url = 'https://whitespaces.meraka.csir.co.za/api/paws'
+paws_url = 'http://localhost:8000/api/pawsc'
 ftvs=470 # Starting frequency of the UHF band in Southern Africa
 ctvs=21 # First channel in the UHF band
 fd=ftvs-ctvs
@@ -215,9 +215,10 @@ def getSpectrum():
 
 # Get result from spectrum database
 rawresult = getSpectrum()
+print (rawresult)
 #print (json.dumps(rawresult, sort_keys=True, indent=4, ))
-str = json.loads(rawresult)
-print (json.dumps(str,indent=4))
+#str = json.loads(rawresult)
+#print (json.dumps(str,indent=4))
 
 
 
