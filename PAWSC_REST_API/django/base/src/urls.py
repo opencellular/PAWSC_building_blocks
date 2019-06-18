@@ -15,7 +15,7 @@ router.register(r'groups', views.GroupViewSet)
 #router.register(r'titles', TitlesViewSet, base_name='titles')
 
 urlpatterns = [
-    url(r'pawsc', InitViewSet.as_view())
+    path(r'pawsc', InitViewSet.as_view())
 ]   
  
 urlpatterns += router.urls
