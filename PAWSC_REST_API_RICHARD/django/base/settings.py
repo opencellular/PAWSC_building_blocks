@@ -25,7 +25,7 @@ SECRET_KEY = '^d9c5kv(!iupcjw(#x6an=br7nk!4adu#i170&7%y$rs*xqz!^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['vpn.inethi.net','ec2-3-214-99-37.compute-1.amazonaws.com','pawsc.info' ]
+ALLOWED_HOSTS = ['localhost', 'vpn.inethi.net','ec2-3-214-99-37.compute-1.amazonaws.com','pawsc.info' ]
 
 
 # Application definition
