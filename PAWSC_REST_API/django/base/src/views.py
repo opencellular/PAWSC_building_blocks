@@ -3,12 +3,9 @@ from rest_framework import viewsets
 from base.src.serializers import UserSerializer, GroupSerializer
 from rest_framework.views import APIView, Response
 from base.src import constants
+from base.src.PAWSCMessage import PawscJson
 
 SpecResp = {
-	"id": "45455",
-	"jsonrpc": "2.0",
-	"method": "spectrum.pawsc.getSpectrum",
-	"params": {
 		"apiKey": "xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx",
 		"type": "SPECTRUM_RESP",
 		"version": "1.0",
@@ -91,78 +88,95 @@ SpecResp = {
 			}]]
 		}]
 	}
-}
 
 class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+	"""
+	API endpoint that allows users to be viewed or edited.
+	"""
+	queryset = User.objects.all().order_by('-date_joined')
+	serializer_class = UserSerializer
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+	"""
+	API endpoint that allows groups to be viewed or edited.
+	"""
+	queryset = Group.objects.all()
+	serializer_class = GroupSerializer
 
 
 
 class InitViewSet(APIView):
+
+
+	def Method_Init_Req(self,params):
+		print('Received INIT_REQ')
+		return {"type": "INIT_RESP"}
+	
+	def Method_Spec_Req(self,params):
+		print('Received SPEC_REQ')
+		return SpecResp
+
+	def Unknown_Req(self,params):
+		print('Received Unknown Method: ', params)
+		return {'code': 'xxx', 'message': 'Unknown Method: ' + params, 'data': 'zzz'}
+	  
+	def Malformed_Req(self):
+		print('Received Malformed Request')
+		return {'code': 'xxx', 'message': 'MALFORMED_REQUEST', 'data': 'zzz'}
    
-    def Method_Init_Req(self,params,RD):
-        print('Received INIT_REQ')
-        RD['data'] = 'Received INIT_REQ'
-        return RD
-    
-    def Method_Spec_Req(self,params,RD):
-        print('Received SPEC_REQ')
-        RD = SpecResp
-        #RD['data'] = 'Received SPEC_REQ'
-        return RD
+
+	def get(self, request, format=None):
+	  return Response('GET NOT IMPLMENTED')
+
+	   
+	def post(self, request, format=None):
+		
+		PostString = request.data
+		print(PostString)
+		
+		RD = PawscJson('2.0')
+		if ('id' in PostString):
+			JsonID = PostString['id']
+			RD.IDSet(JsonID)
+	
+			if (('method' in PostString) and ('params' in PostString)):
+				PAWSCMethod = PostString['method']
+				PAWSCParams = PostString['params']
+				print('Received: ', PAWSCMethod, PAWSCParams)
+
+				if (PAWSCMethod == constants.MethodNameInit):
+					Result = self.Method_Init_Req(PAWSCParams)
+					RD.MethodSet(constants.MethodNameInit)
+					RD.ParamSet(Result)
+
+				elif (PAWSCMethod == constants.MethodNameAvailableSpectrum):
+					Result = self.Method_Spec_Req(PAWSCParams)
+					RD.MethodSet(constants.MethodNameAvailableSpectrum)
+					RD.ParamSet(Result)
+
+				# Add more methods here
 
 
-    def Unknown_Req(self,params,RD):
-        print('Received Unknown Method: ', params)
-        RD['error'] = 'Unknown Method: ' + params
-        return RD
-
-    def Malformed_Req(self,RD):
-        print('Received Malformed Request')
-        RD['error'] = 'MALFORMED_REQUEST: No Method'
-        return RD
 
 
-    def get(self, request, format=None):
-      return Response('GET NOT IMPLMENTED')
+				# Case for method not known
+				else:
+					Result = self.Unknown_Req(PAWSCMethod)
+					RD.ErrorSet(constants.ExceptionMessageInvalidMethod)
+					RD.ParamSet(Result)
 
-       
-    def post(self, request, format=None):
-        RD = {
-            'jsonrpc': '2.0',
-            'id': '45455'
-        }
+			# Case fo malformed request
+			else:
+				Result = self.Malformed_Req()
+				RD.ErrorSet(constants.ExceptionMessageParametersRequired)
+				RD.ParamSet(Result)
 
-        PostString = request.data
-        print(PostString)
-        
+		# Case fo malformed request
+		else:
+			Result = self.Malformed_Req()
+			RD.ErrorSet(constants.ExceptionMessageParametersRequired)
+			RD.ParamSet(Result)
 
-        if (('method' in PostString) and ('params' in PostString)):
-            PAWSCMethod = PostString['method']
-            PAWSCParams = PostString['params']
-
-            print('Received: ', PAWSCMethod, PAWSCParams)
-
-            if (PAWSCMethod == constants.MethodNameInit):
-                RD = self.Method_Init_Req(PAWSCParams,RD)
-            elif (PAWSCMethod == constants.MethodNameAvailableSpectrum):
-                RD = self.Method_Spec_Req(PAWSCParams,RD)
-            else:
-                RD = self.Unknown_Req(PAWSCMethod,RD)
-        else:
-            RD = self.Malformed_Req(RD)
-           
-        
-        return Response(RD)
+		print(RD.Get())
+		return Response(RD.Get())
