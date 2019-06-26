@@ -2,6 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from base.src.serializers import UserSerializer, GroupSerializer
 from rest_framework.views import APIView, Response
+from base.src import constants
 
 SpecResp = {
 	"id": "45455",
@@ -108,6 +109,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
+
 class InitViewSet(APIView):
    
     def Method_Init_Req(self,params,RD):
@@ -150,10 +152,12 @@ class InitViewSet(APIView):
         if (('method' in PostString) and ('params' in PostString)):
             PAWSCMethod = PostString['method']
             PAWSCParams = PostString['params']
+
             print('Received: ', PAWSCMethod, PAWSCParams)
-            if (PAWSCMethod == 'initialize.pawsc'):
+
+            if (PAWSCMethod == constants.MethodNameInit):
                 RD = self.Method_Init_Req(PAWSCParams,RD)
-            elif (PAWSCMethod == 'spectrum.pawsc.getSpectrum'):
+            elif (PAWSCMethod == constants.MethodNameAvailableSpectrum):
                 RD = self.Method_Spec_Req(PAWSCParams,RD)
             else:
                 RD = self.Unknown_Req(PAWSCMethod,RD)
