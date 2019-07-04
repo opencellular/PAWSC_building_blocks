@@ -3,6 +3,12 @@ from rest_framework import viewsets
 from base.src.serializers import UserSerializer, GroupSerializer
 from rest_framework.views import APIView, Response
 from base.src import constants
+from base.src.PAWSCMessage import PawscJson
+from django.http import JsonResponse 
+import json
+from base.src.models import RegisteredDevices
+#from django.apps import apps
+#RegisteredDevices = apps.get_model(app_label='rest_framework', model_name='RegisteredDevices')
 
 SpecResp = {
 	"id": "45455",
@@ -108,35 +114,31 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
-
+'''
 
 class InitViewSet(APIView):
-   
-    def Method_Init_Req(self,params,RD):
-        print('Received INIT_REQ')
-        RD['data'] = 'Received INIT_REQ'
-        return RD
     
-    def Method_Spec_Req(self,params,RD):
-        print('Received SPEC_REQ')
-        RD = SpecResp
-        #RD['data'] = 'Received SPEC_REQ'
+    def Method_Device_Reg(self, params, RD):
+        #register device assuming criteria is met
+        #display appropriate status message 
+        print('Received REGISTRATION_REQ')
+        #detail = params.body.decode('utf-8')
+        serial_number_value = params['serial_number']
+        location_value = params['location']
+        antenna_characteristics_value = params['antenna_characteristics']
+        device_type_value = params['device_type']
+        device_capabilities_value = params['device_capabilities']
+        device_description_value = params['device_description']
+        detail = RegisteredDevices(serial_number= serial_number_value, location = location_value, antenna_characteristics = antenna_characteristics_value, device_type = device_type_value, device_capabilities= device_capabilities_value, device_description = device_description_value)
+        #data =json.loads(params)
+        #values = RegisteredDevices(detail)
+        detail.save()
+        RD = JsonResponse({"resulst": "ok"})
         return RD
+     
 
 
-    def Unknown_Req(self,params,RD):
-        print('Received Unknown Method: ', params)
-        RD['error'] = 'Unknown Method: ' + params
-        return RD
-
-    def Malformed_Req(self,RD):
-        print('Received Malformed Request')
-        RD['error'] = 'MALFORMED_REQUEST: No Method'
-        return RD
-
-
-    def get(self, request, format=None):
-      return Response('GET NOT IMPLMENTED')
+ 
 
        
     def post(self, request, format=None):
@@ -159,6 +161,9 @@ class InitViewSet(APIView):
                 RD = self.Method_Init_Req(PAWSCParams,RD)
             elif (PAWSCMethod == constants.MethodNameAvailableSpectrum):
                 RD = self.Method_Spec_Req(PAWSCParams,RD)
+            elif (PAWSCMethod == constants.MethodNameRegister):
+                RD = self.Method_Device_Reg(PAWSCParams, RD)             
+                
             else:
                 RD = self.Unknown_Req(PAWSCMethod,RD)
         else:
@@ -166,3 +171,101 @@ class InitViewSet(APIView):
            
         
         return Response(RD)
+'''
+class InitViewSet(APIView):
+    
+    def Method_Device_Reg(self, params):
+        #register device assuming criteria is met
+        #display appropriate status message 
+        print('Received REGISTRATION_REQ')
+        #detail = params.body.decode('utf-8')
+        serial_number_value = params['serial_number']
+        location_value = params['location']
+        antenna_characteristics_value = params['antenna_characteristics']
+        device_type_value = params['device_type']
+        device_capabilities_value = params['device_capabilities']
+        device_description_value = params['device_description']
+        detail = RegisteredDevices(serial_number= serial_number_value, location = location_value, antenna_characteristics = antenna_characteristics_value, device_type = device_type_value, device_capabilities= device_capabilities_value, device_description = device_description_value)
+        #data =json.loads(params)
+        #values = RegisteredDevices(detail)
+      
+        detail.save()
+       
+        RD = JsonResponse({"resulst": "ok"})
+        #return transaction results i.e. successful or error message
+        return RD    
+
+
+    def Method_Init_Req(self,params):
+        print('Received INIT_REQ')
+        return {"type": "INIT_RESP"}
+
+    def Method_Spec_Req(self,params):
+        print('Received SPEC_REQ')
+        return SpecResp
+
+    def Unknown_Req(self,params):
+        print('Received Unknown Method: ', params)
+        return {'code': 'xxx', 'message': 'Unknown Method: ' + params, 'data': 'zzz'}
+
+    def Malformed_Req(self):
+        print('Received Malformed Request')
+        return {'code': 'xxx', 'message': 'MALFORMED_REQUEST', 'data': 'zzz'}
+
+
+    def get(self, request, format=None):
+        return Response('GET NOT IMPLMENTED')
+
+
+    def post(self, request, format=None):
+
+        PostString = request.data
+        print(PostString)
+
+        RD = PawscJson('2.0')
+        if ('id' in PostString):
+            JsonID = PostString['id']
+            RD.IDSet(JsonID)
+
+            if (('method' in PostString) and ('params' in PostString)):
+                PAWSCMethod = PostString['method']
+                PAWSCParams = PostString['params']
+                print('Received: ', PAWSCMethod, PAWSCParams)
+
+                if (PAWSCMethod == constants.MethodNameInit):
+                    Result = self.Method_Init_Req(PAWSCParams)
+                    RD.MethodSet(constants.MethodNameInit)
+                    RD.ParamSet(Result)
+
+                elif (PAWSCMethod == constants.MethodNameAvailableSpectrum):
+                    Result = self.Method_Spec_Req(PAWSCParams)
+                    RD.MethodSet(constants.MethodNameAvailableSpectrum)
+                    RD.ParamSet(Result)
+
+                # Add more methods here
+                elif (PAWSCMethod == constants.MethodNameRegister):
+                    Result = self.Method_Device_Reg(PAWSCParams)
+                    RD.MethodSet(constants.MethodNameRegister)
+                    RD.ParamSet(Result)                             
+
+                # Case for method not known
+                else:
+                    Result = self.Unknown_Req(PAWSCMethod)
+                    RD.ErrorSet(constants.ExceptionMessageInvalidMethod)
+                    RD.ParamSet(Result)
+
+            # Case fo malformed request
+            else:
+                Result = self.Malformed_Req()
+                RD.ErrorSet(constants.ExceptionMessageParametersRequired)
+                RD.ParamSet(Result)
+
+        # Case of malformed request
+        else:
+            Result = self.Malformed_Req()
+            RD.ErrorSet(constants.ExceptionMessageParametersRequired)
+            RD.ParamSet(Result)
+
+        print(RD.Get())
+        return Response(RD.Get())
+    
