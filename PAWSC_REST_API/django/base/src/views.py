@@ -5,6 +5,8 @@ from rest_framework.views import APIView, Response
 from base.src import constants
 from base.src.PAWSCMessage import PawscJson
 
+from .models import Scan_Device
+
 SpecResp = {
 		"apiKey": "xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx",
 		"type": "SPECTRUM_RESP",
@@ -108,7 +110,6 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 class InitViewSet(APIView):
 
-
 	def Method_Init_Req(self,params):
 		print('Received INIT_REQ')
 		return {"type": "INIT_RESP"}
@@ -125,6 +126,10 @@ class InitViewSet(APIView):
 		print('Received Malformed Request')
 		return {'code': 'xxx', 'message': 'MALFORMED_REQUEST', 'data': 'zzz'}
    
+	def Method_Init_Scan_Req(self,params):
+		print('Received INIT_SCAN_REQ')
+		
+
 
 	def get(self, request, format=None):
 	  return Response('GET NOT IMPLMENTED')
