@@ -87,9 +87,13 @@ SpecResp = {
 			{
 				"hz": 5.26e8,
 				"dbm": 30.0
-			}]]
+			}
+			]]
 		}]
 	}
+
+
+
 
 class UserViewSet(viewsets.ModelViewSet):
 	"""
