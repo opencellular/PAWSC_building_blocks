@@ -10,6 +10,8 @@ from base.src.models import RegisteredDevices
 #from django.apps import apps
 #RegisteredDevices = apps.get_model(app_label='rest_framework', model_name='RegisteredDevices')
 
+from base.src.PAWSCFunction import pawscFunction
+
 SpecResp = {
 	"id": "45455",
 	"jsonrpc": "2.0",
@@ -87,14 +89,8 @@ SpecResp = {
 		},
 		"spectra": [{
 			"resolutionBwHz": 8e6,
-			"profiles": [[{
-				"hz": 5.18e8,
-				"dbm": 30.0
-			},
-			{
-				"hz": 5.26e8,
-				"dbm": 30.0
-			}]]
+			"profiles":  [pawscFunction.get_spectrum()]
+                        #[[{	"hz": 5.18e8,	"dbm": 30.0},{"hz": 5.26e8,"dbm": 30.0	}]] #original hint at format
 		}]
 	}
 }
@@ -114,64 +110,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
-'''
 
-class InitViewSet(APIView):
-    
-    def Method_Device_Reg(self, params, RD):
-        #register device assuming criteria is met
-        #display appropriate status message 
-        print('Received REGISTRATION_REQ')
-        #detail = params.body.decode('utf-8')
-        serial_number_value = params['serial_number']
-        location_value = params['location']
-        antenna_characteristics_value = params['antenna_characteristics']
-        device_type_value = params['device_type']
-        device_capabilities_value = params['device_capabilities']
-        device_description_value = params['device_description']
-        detail = RegisteredDevices(serial_number= serial_number_value, location = location_value, antenna_characteristics = antenna_characteristics_value, device_type = device_type_value, device_capabilities= device_capabilities_value, device_description = device_description_value)
-        #data =json.loads(params)
-        #values = RegisteredDevices(detail)
-        detail.save()
-        RD = JsonResponse({"resulst": "ok"})
-        return RD
-     
-
-
- 
-
-       
-    def post(self, request, format=None):
-        RD = {
-            'jsonrpc': '2.0',
-            'id': '45455'
-        }
-
-        PostString = request.data
-        print(PostString)
-        
-
-        if (('method' in PostString) and ('params' in PostString)):
-            PAWSCMethod = PostString['method']
-            PAWSCParams = PostString['params']
-
-            print('Received: ', PAWSCMethod, PAWSCParams)
-
-            if (PAWSCMethod == constants.MethodNameInit):
-                RD = self.Method_Init_Req(PAWSCParams,RD)
-            elif (PAWSCMethod == constants.MethodNameAvailableSpectrum):
-                RD = self.Method_Spec_Req(PAWSCParams,RD)
-            elif (PAWSCMethod == constants.MethodNameRegister):
-                RD = self.Method_Device_Reg(PAWSCParams, RD)             
-                
-            else:
-                RD = self.Unknown_Req(PAWSCMethod,RD)
-        else:
-            RD = self.Malformed_Req(RD)
-           
-        
-        return Response(RD)
-'''
 class InitViewSet(APIView):
     
     def Method_Device_Reg(self, params):
@@ -193,12 +132,13 @@ class InitViewSet(APIView):
        
         RD = JsonResponse({"resulst": "ok"})
         #return transaction results i.e. successful or error message
-        return RD    
+        #return RD
+        return {"type": "REGISTRATION_RES"}
 
 
     def Method_Init_Req(self,params):
         print('Received INIT_REQ')
-        return {"type": "INIT_RESP"}
+        return {"type": "INIT_RESP"} #???
 
     def Method_Spec_Req(self,params):
         print('Received SPEC_REQ')
@@ -238,6 +178,8 @@ class InitViewSet(APIView):
                     RD.ParamSet(Result)
 
                 elif (PAWSCMethod == constants.MethodNameAvailableSpectrum):
+                    #print ('hello ')
+                    #pawscFunction.get_spectrum()
                     Result = self.Method_Spec_Req(PAWSCParams)
                     RD.MethodSet(constants.MethodNameAvailableSpectrum)
                     RD.ParamSet(Result)

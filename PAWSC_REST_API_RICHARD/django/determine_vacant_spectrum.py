@@ -23,6 +23,8 @@ spectrum_assignment_long_term = "freqAssignment" #occupied spectrum
 spectrum_unassigned = "unassigned_freq" #vacant spetrum
 spectrum_assignment_dynamic = "dynamic_freq_assignment" #dynamically assigned spectrum or short-term spectrum lease
 spectrum_assignment_changes_flag = "flags" # containts binary values (0/1) to indicate whether or not there's been a change in frequency assignment
+spectrum_operators = "operators"
+spectrum_license = "spectrumLicense"
 
 #frequency bands
 nine_hundred_MHz_band_start = 880
@@ -99,7 +101,12 @@ def vacant_spectrum_finder(conn):
     fetch statically assigned frequencies  
     '''
     cur = conn.cursor()
-    sql = 'SELECT * FROM '+spectrum_assignment_long_term
+    # do a table join and use the country ID for Mozambique
+    #based on database schema: https://dbdiagram.io/d/5c719df7f7c5bb70c72f1a9a
+    sql = 'SELECT freqStart, freqEnd FROM '+spectrum_assignment_long_term+ \
+    ' INNER JOIN spectrumLicense ON freqAssignment.license_ID = spectrumLicense.ID  \
+    INNER JOIN '+ spectrum_operators +' ON ' +spectrum_operators+'.ID = '+ spectrum_license +'.Operator_ID \
+    WHERE ' +spectrum_operators+'.country_ID = 152'
     cur.execute(sql)
         
     static_frequency_assignment = cur.fetchall()      
@@ -130,9 +137,9 @@ def vacant_spectrum_finder(conn):
         '''
         The logic "interval.closed(row[x], row[y])" denotes start and end points of a range.
         'x' and 'y' are the columns in the table. 
-        For `openspectrum.db' for example, `freqStart` and `freqEnd` are in column number 2 & 3  
+        For example, since we only selected `freqStart` and `freqEnd` from the database,  the values are in column number 0 & 1  
         '''
-        r1 = interval.closed(row[2]-boundary, row[3]+boundary) # -,+ guardband  ensures overlapingbounds are excluded
+        r1 = interval.closed(row[0]-boundary, row[1]+boundary) # -,+ boundary  ensures overlapingbounds are excluded
         temp = r - r1
         r = temp     
      
@@ -150,13 +157,27 @@ def vacant_spectrum_finder(conn):
     '''
     Save the newly calculated unoccupied frequencies to database if vacant_spectrum != empty
     '''
+    freq_band = ""
     if (check_if_list_empty(temp)==True ): #needs fixing, currently breaks when list is empty [4 July 2019]
         print 'No vacant spectrum found'
     else:
         cur = conn.cursor()            
         for item in vacant_spectrum:
+            '''
+            Determine frequency band
+            '''
+            if item in interval.closed(nine_hundred_MHz_band_start, nine_hundred_MHz_band_end):
+                freq_band = "900" 
+            elif item in interval.closed(eighteen_hundred_MHz_band_start, eighteen_hundred_MHz_band_end):
+                freq_band = "1800"
+            elif item in interval.closed(twenty_one_hundred_MHz_band_start, twenty_one_hundred_MHz_band_end):
+                freq_band = "2100"
+            elif item in interval.closed(twenty_six_hundred_MHz_band_start, twenty_six_hundred_MHz_band_end):
+               freq_band = "2600"                
+              
+            
             #The ID field is set to auto-increment and is also the primary key
-            sql = 'INSERT INTO '+spectrum_unassigned+' (freqStart, freqEnd) VALUES (' + str(item).strip("( ) []") + ')' #strip off the brackets if any 
+            sql = 'INSERT INTO '+spectrum_unassigned+' (freqStart, freqEnd, band) VALUES (' + str(item).strip("( ) []")+ ','+freq_band +')' #strip off the brackets if any 
             cur.execute(sql)            
         print (temp)
     
