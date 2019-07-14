@@ -39,6 +39,7 @@ class UnassignedFreq(models.Model):
     id = models.TextField(db_column='ID', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     freqstart = models.IntegerField(db_column='freqStart')  # Field name made lowercase.
     freqend = models.IntegerField(db_column='freqEnd')  # Field name made lowercase.
+    band = models.IntegerField(db_column='band')
 
     class Meta:
         managed = False

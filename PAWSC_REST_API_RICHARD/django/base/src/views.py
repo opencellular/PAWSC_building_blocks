@@ -12,6 +12,12 @@ from base.src.models import RegisteredDevices
 
 from base.src.PAWSCFunction import pawscFunction
 
+"""
+TODO
+1) extract 'band', 'tech' and 'bw' from AVAILABLE_SPECTRUM_REQ and use in function call pawscFunction.get_spectrum('900E', 'GSM', 0.2)
+2) ?
+"""
+
 SpecResp = {
 	"id": "45455",
 	"jsonrpc": "2.0",
@@ -89,7 +95,7 @@ SpecResp = {
 		},
 		"spectra": [{
 			"resolutionBwHz": 8e6,
-			"profiles":  [pawscFunction.get_spectrum()]
+			"profiles":  [pawscFunction.get_spectrum('900E', 'GSM', 0.2)]
                         #[[{	"hz": 5.18e8,	"dbm": 30.0},{"hz": 5.26e8,"dbm": 30.0	}]] #original hint at format
 		}]
 	}
