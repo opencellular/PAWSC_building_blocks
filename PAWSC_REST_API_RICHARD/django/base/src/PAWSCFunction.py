@@ -26,9 +26,9 @@ class pawscFunction:
         data = UnassignedFreq.objects.all().values("freqstart", "freqend")
         freq_ranges = []     
         for item in data: #UnassignedFreq.objects.all().values("freqstart", "freqend"):
-            print (item['freqstart'], item['freqend'])
+            #print (item['freqstart'], item['freqend'])
             freq_ranges.append(FreqRangeToArfcnRange(freq_band,tech, item['freqstart'], item['freqend'], bw))
-            FreqRangeToArfcnRange(freq_band,tech, item['freqstart'], item['freqend'] , bw)
+            #FreqRangeToArfcnRange(freq_band,tech, item['freqstart'], item['freqend'] , bw)
          
         #print (freq_ranges)
         #for item in UnassignedFreq.objects.all().values("freqstart", "freqend"):

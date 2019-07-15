@@ -25,7 +25,7 @@ class RegisteredDevices(models.Model):
 
 
 class DynamicFreqAssignment(models.Model):
-    id = models.TextField(db_column='ID', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
+    id = models.TextField(db_column='ID', primary_key=True)  # Field name made lowercase. This field type is a guess.
     license_id = models.IntegerField(db_column='license_ID')  # Field name made lowercase.
     freqstart = models.IntegerField(db_column='freqStart')  # Field name made lowercase.
     freqend = models.IntegerField(db_column='freqEnd')  # Field name made lowercase.
@@ -36,7 +36,7 @@ class DynamicFreqAssignment(models.Model):
 
 
 class UnassignedFreq(models.Model):
-    id = models.TextField(db_column='ID', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
+    id = models.TextField(db_column='ID', primary_key=True)  # Field name made lowercase. This field type is a guess.
     freqstart = models.IntegerField(db_column='freqStart')  # Field name made lowercase.
     freqend = models.IntegerField(db_column='freqEnd')  # Field name made lowercase.
     band = models.IntegerField(db_column='band')
