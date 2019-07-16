@@ -95,7 +95,7 @@ SpecResp = {
 		},
 		"spectra": [{
 			"resolutionBwHz": 8e6,
-			"profiles":  [pawscFunction.get_spectrum('900E', 'GSM', 0.2)]
+			"profilesHz":  [pawscFunction.get_spectrum('900E', 'GSM', 0.2)]
                         #[[{	"hz": 5.18e8,	"dbm": 30.0},{"hz": 5.26e8,"dbm": 30.0	}]] #original hint at format
 		}]
 	}

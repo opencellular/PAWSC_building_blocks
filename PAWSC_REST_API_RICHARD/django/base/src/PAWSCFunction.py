@@ -1,3 +1,6 @@
+"""
+This file contains essential functions to process pawsc requests
+"""
 import json
 from base.src.models import UnassignedFreq
 from base.src.arfcn import FreqRangeToArfcnRange
@@ -23,7 +26,7 @@ class pawscFunction:
             data = UnassignedFreq.objects.all().values("freqstart", "freqend").filter(band = 900)
         """      
        
-        data = UnassignedFreq.objects.all().values("freqstart", "freqend")
+        data = UnassignedFreq.objects.all().values("freqstart", "freqend").filter(band = 900)
         freq_ranges = []     
         for item in data: #UnassignedFreq.objects.all().values("freqstart", "freqend"):
             #print (item['freqstart'], item['freqend'])
@@ -35,12 +38,11 @@ class pawscFunction:
             #print item
         #item = (880, 885)
         #return (FreqRangeToArfcnRange('900E','GSM',item[0], item[1], 0.2) )
-        return freq_ranges
+        return data, "profilesN", freq_ranges
         """
         May need to strip off the brackets depending on output format requirements
         """    
-        #return str(freq_ranges).strip("[ ]")
-       
+        #return str(freq_ranges).strip("[ ]")      
         
 
     def __init__(self):
