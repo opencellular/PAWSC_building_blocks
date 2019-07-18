@@ -18,7 +18,8 @@ TODO
 2) ?
 """
 
-SpecResp = {
+SpecResp_ORIGINAL_IDEA = {    
+    
 	"id": "45455",
 	"jsonrpc": "2.0",
 	"method": "spectrum.pawsc.getSpectrum",
@@ -92,13 +93,66 @@ SpecResp = {
 		"deviceOwner": {
 			"owner": "[\"vcard\",[[\"version\",{},\"text\",\"4.0\"],[\"fn\",{},\"text\",\"Size Testing\"],[\"tel\",{\"type\":\"work\"},\"text\",\"(012) 841-4766\"],[\"email\",{\"type\":\"work\"},\"text\",\"djohnson@cs.uct.ac.za\"],[\"adr\",{\"type\":\"work\"},\"text\",[\"\",\"\",\"CSIR Meraka Institute\",\"Brummeria\",\"Pretoria\",\"0184\",\"RSA\"]],[\"prodid\",{},\"text\",\"ez-vcard ${version}\"]]]",
 			"operator": "[\"vcard\",[[\"version\",{},\"text\",\"4.0\"],[\"fn\",{},\"text\",\"Size Testing\"],[\"tel\",{\"type\":\"work\"},\"text\",\"(012) 841-3028\"],[\"email\",{\"type\":\"work\"},\"text\",\"djohnson@cs.uct.ac.za\"],[\"adr\",{\"type\":\"work\"},\"text\",[\"\",\"\",\"CSIR Meraka Institute\",\"Brummeria\",\"Pretoria\",\"0184\",\"RSA\"]],[\"prodid\",{},\"text\",\"ez-vcard ${version}\"]]]"
-		},
-		"spectra": [{
+		}, 
+                "eventTime": {
+                "startTime": "2019-06-02T14:30:21Z",
+                "stopTime": "2019-06-02T20:00:00Z",
+                "technology": "LTE",
+                "band": "20",
+                "duplex": "FDD"                 
+                },
+                               
+                                         
+		"spectra":  [{
 			"resolutionBwHz": 8e6,
 			"profilesHz":  [pawscFunction.get_spectrum('900E', 'GSM', 0.2)]
                         #[[{	"hz": 5.18e8,	"dbm": 30.0},{"hz": 5.26e8,"dbm": 30.0	}]] #original hint at format
 		}]
+                
 	}
+}
+
+SpecResp = {
+    "spectrumSchedules": [
+    {
+    "eventTime": {
+    "startTime": "2019-06-02T14:30:21Z",
+    "stopTime": "2019-06-02T20:00:00Z"
+    },
+    "technology": "LTE",
+    "band": "20",
+    "duplex": "FDD",
+    
+    "spectra": [
+    {
+        "resolutionBwHz": 3e6,
+    "profilesHz": [ pawscFunction.get_spectrum('Band20', 'LTE', 0.2)
+    #[
+    #{"Dhz": 7.910e8, "UHz":8.320e8, "Ddbm": 23.0, "Udbm": 15.0}, 
+    #{"Dhz": 7.970e8, "UHz":8.380e8, "Ddbm": 23.0, "Udbm": 15.0}
+    #],
+    #[
+    #{"Dhz": 8.050e8, "UHz":8.460e8, "Ddbm": 30.0, "Udbm": 20.0},
+    #{"Dhz": 8.140e8, "UHz":8.550e8, "Ddbm": 30.0, "Udbm": 20.0}
+    #]
+    ]
+   # "profilesN": [
+   # [
+   # {"DARFCN": 6165, "UARFCN": 24165, "Ddbm": 23.0, "Udbm": 15.0}, 
+   # {"DARFCN": 6195, "UARFCN": 24195, "Ddbm": 23.0, "Udbm": 15.0} 
+   # ],
+   # [
+   # {"DARFCN": 6305, "UARFCN": 24305, "Ddbm": 30.0, "Udbm": 20.0},
+   # {"DARFCN": 6365, "UARFCN": 24365, "Ddbm": 30.0, "Udbm": 20.0} 
+   # ]
+   # ]            
+    }
+    ]
+    }
+        
+    ]
+    
+
 }
 
 class UserViewSet(viewsets.ModelViewSet):
