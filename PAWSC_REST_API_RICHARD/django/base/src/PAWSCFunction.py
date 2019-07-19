@@ -37,7 +37,12 @@ class pawscFunction:
         #for item in UnassignedFreq.objects.all().values("freqstart", "freqend"):
             #print item
         #item = (880, 885)
-        #return (FreqRangeToArfcnRange('900E','GSM',item[0], item[1], 0.2) )
+        #return (FreqRangeToArfcnRange('900E','GSM',item[0], item[1], 0.2) )  
+        print ('START ntwenu:')
+        for ntwenu in freq_ranges:
+            print (ntwenu['arfcn_start'])
+        print ('END ntwenu' )     
+        
         return data, "profilesN", freq_ranges
         """
         May need to strip off the brackets depending on output format requirements

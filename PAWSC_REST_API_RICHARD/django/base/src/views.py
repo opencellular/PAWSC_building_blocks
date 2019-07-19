@@ -11,6 +11,9 @@ from base.src.models import RegisteredDevices
 #RegisteredDevices = apps.get_model(app_label='rest_framework', model_name='RegisteredDevices')
 
 from base.src.PAWSCFunction import pawscFunction
+#from time import gmtime, strftime
+import datetime
+from datetime import timedelta
 
 """
 TODO
@@ -112,12 +115,13 @@ SpecResp_ORIGINAL_IDEA = {
 	}
 }
 
+start_time = datetime.datetime.now().isoformat()
 SpecResp = {
     "spectrumSchedules": [
     {
     "eventTime": {
-    "startTime": "2019-06-02T14:30:21Z",
-    "stopTime": "2019-06-02T20:00:00Z"
+    "startTime": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z', 
+    "stopTime":  (datetime.datetime.utcnow().replace(microsecond=0) + timedelta(hours=2, days = 6)).isoformat() + 'Z' 
     },
     "technology": "LTE",
     "band": "20",
