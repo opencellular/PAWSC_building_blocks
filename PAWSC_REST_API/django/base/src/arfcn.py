@@ -1,22 +1,11 @@
+from base.src import constants
+
 def FreqToArfcn(band, tech, freq):
-
-    LTE_arfcn_table = {
-        'Band1':{'FDL_low':2110, 'NOffs-DL':0, 'FUL_low': 1920, 'NOffs-UL':18000, 'spacing': 190},
-        'Band2':{'FDL_low':2110, 'NOffs-DL':0, 'FUL_low': 1920, 'NOffs-UL':18000, 'spacing': 80},
-        'Band3':{'FDL_low':2110, 'NOffs-DL':0, 'FUL_low': 1920, 'NOffs-UL':18000, 'spacing': 95},
-        'Band20':{'FDL_low':791, 'NOffs-DL':6150, 'FUL_low': 832, 'NOffs-UL':24150, 'spacing': -41 }
-    }
-
-    GSM_arfcn_table = {
-        '900E':{'FDL_low': 925.2, 'FDL_high': 959.8, 'FUL_low': 880.2, 'FUL_high': 914.8, 'spacing': 45},
-        '900R':{'FDL_low': 921.2, 'FDL_high': 959.8, 'FUL_low': 876.2, 'FUL_high': 914.8, 'spacing': 45},
-        '900P':{'FDL_low': 935.2, 'FDL_high': 959.8, 'FUL_low': 890.2, 'FUL_high': 914.8, 'spacing': 45}
-    }
-
         
     if (tech=='LTE'):
-        arfcn_table = LTE_arfcn_table
+        arfcn_table = constants.LTE_arfcn_table
         arfcn_dict = arfcn_table[band]
+
 
         # Check if given frequency is in downlink or uplink
         if (arfcn_dict['FDL_low'] > arfcn_dict['FUL_low']):
@@ -40,7 +29,7 @@ def FreqToArfcn(band, tech, freq):
         return {'arfcn_DL': arfcn_DL, 'arfcn_UL': arfcn_UL}
 
     if (tech == 'GSM'):
-        arfcn_table = GSM_arfcn_table
+        arfcn_table = constants.GSM_arfcn_table
         arfcn_dict = arfcn_table[band]
 
         if (arfcn_dict['FDL_low'] > arfcn_dict['FUL_low']):
