@@ -171,6 +171,31 @@ def  convertCellular(freqRanges, spectrumRES, technology, band):
 
     # Request arfcn cellular blocks
     
+
+    # Build up a spectra section of AVAIL_SPECTRUM_RESP
+    spectra = []
+    for freqProfile in freqRanges:
+        chwidth = int(freqProfile['channelWidthHz']/1000000)
+        spectra_entry = {}
+        for DBlock, UBlock in zip(cell_ws_DL_final, cell_ws_UL_final):
+  
+            Dfreq_start = int(DBlock[0]/1000000)
+            Dpower_start = DBlock[1] 
+            Dfreq_end = int(DBlock[2]/1000000)
+            Dpower_end = DBlock[3]
+            Upower_start = int(UBlock[0]/1000000)
+            Dpower_start = UBlock[1] 
+            Upower_end = int(UBlock[2]/1000000)
+            Dpower_end = UBlock[3]
+            
+            # Check if channel width fits in available spectrum 
+            if Dfreq_end-Dfreq_start > chwidth:
+                if not('resolutionBwHz' in spectra_entry):
+                    chwidth_pawsc = str(chwidth) + 'e6'
+                    spectra_entry['resolutionBwHz'] = chwidth_pawsc
+                
+
+
     # Downlink
     for cell_block in cell_ws_DL_final:
         freq_start = int(cell_block[0]/1000000)
