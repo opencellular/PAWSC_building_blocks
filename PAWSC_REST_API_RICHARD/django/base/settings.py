@@ -25,7 +25,7 @@ SECRET_KEY = '^d9c5kv(!iupcjw(#x6an=br7nk!4adu#i170&7%y$rs*xqz!^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'vpn.inethi.net','ec2-3-214-99-37.compute-1.amazonaws.com','pawsc.info' ]
+ALLOWED_HOSTS = ['127.0.0.1', 'vpn.inethi.net','ec2-3-214-99-37.compute-1.amazonaws.com','pawsc.info' ]
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'base', #this fixes circular import issues of model.py elements
 ]
 
 MIDDLEWARE = [
@@ -78,6 +79,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'openspectrum.db')
     }
 }
 

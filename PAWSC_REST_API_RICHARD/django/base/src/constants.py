@@ -26,4 +26,12 @@ TypeNotifySpectrumUsageResponse = "SPECTRUM_USE_RESP"
 TypeDeviceValidationRequest = "DEV_VALID_REQ"
 TypeDeviceValidationResponse = "DEV_VALID_RESP"
 
+ErrorMessageNotRegistered = "Device not Registered"
+ErrorMessageModeNotImplemented = "Device Mode not Implemented"
+ErrorMessageDatabaseUnsupported = "The Database does not support the specified version of the message."
+ErrorMessagDeviceIdNotAuthorized = "Device is not authorized"
+
+ExceptionMessageInvalidMethod = "Invalid method"
+ExceptionMessageParametersRequired = "Parameters Required";
+
 

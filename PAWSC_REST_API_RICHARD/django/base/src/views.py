@@ -3,8 +3,26 @@ from rest_framework import viewsets
 from base.src.serializers import UserSerializer, GroupSerializer
 from rest_framework.views import APIView, Response
 from base.src import constants
+from base.src.PAWSCMessage import PawscJson
+from django.http import JsonResponse 
+import json
+from base.src.models import RegisteredDevices
+#from django.apps import apps
+#RegisteredDevices = apps.get_model(app_label='rest_framework', model_name='RegisteredDevices')
 
-SpecResp = {
+from base.src.PAWSCFunction import pawscFunction
+#from time import gmtime, strftime
+import datetime
+from datetime import timedelta
+
+"""
+TODO
+1) extract 'band', 'tech' and 'bw' from AVAILABLE_SPECTRUM_REQ and use in function call pawscFunction.get_spectrum('900E', 'GSM', 0.2)
+2) ?
+"""
+
+SpecResp_ORIGINAL_IDEA = {    
+    
 	"id": "45455",
 	"jsonrpc": "2.0",
 	"method": "spectrum.pawsc.getSpectrum",
@@ -78,19 +96,67 @@ SpecResp = {
 		"deviceOwner": {
 			"owner": "[\"vcard\",[[\"version\",{},\"text\",\"4.0\"],[\"fn\",{},\"text\",\"Size Testing\"],[\"tel\",{\"type\":\"work\"},\"text\",\"(012) 841-4766\"],[\"email\",{\"type\":\"work\"},\"text\",\"djohnson@cs.uct.ac.za\"],[\"adr\",{\"type\":\"work\"},\"text\",[\"\",\"\",\"CSIR Meraka Institute\",\"Brummeria\",\"Pretoria\",\"0184\",\"RSA\"]],[\"prodid\",{},\"text\",\"ez-vcard ${version}\"]]]",
 			"operator": "[\"vcard\",[[\"version\",{},\"text\",\"4.0\"],[\"fn\",{},\"text\",\"Size Testing\"],[\"tel\",{\"type\":\"work\"},\"text\",\"(012) 841-3028\"],[\"email\",{\"type\":\"work\"},\"text\",\"djohnson@cs.uct.ac.za\"],[\"adr\",{\"type\":\"work\"},\"text\",[\"\",\"\",\"CSIR Meraka Institute\",\"Brummeria\",\"Pretoria\",\"0184\",\"RSA\"]],[\"prodid\",{},\"text\",\"ez-vcard ${version}\"]]]"
-		},
-		"spectra": [{
+		}, 
+                "eventTime": {
+                "startTime": "2019-06-02T14:30:21Z",
+                "stopTime": "2019-06-02T20:00:00Z",
+                "technology": "LTE",
+                "band": "20",
+                "duplex": "FDD"                 
+                },
+                               
+                                         
+		"spectra":  [{
 			"resolutionBwHz": 8e6,
-			"profiles": [[{
-				"hz": 5.18e8,
-				"dbm": 30.0
-			},
-			{
-				"hz": 5.26e8,
-				"dbm": 30.0
-			}]]
+			"profilesHz":  [pawscFunction.get_spectrum('900E', 'GSM', 0.2)]
+                        #[[{	"hz": 5.18e8,	"dbm": 30.0},{"hz": 5.26e8,"dbm": 30.0	}]] #original hint at format
 		}]
+                
 	}
+}
+
+start_time = datetime.datetime.now().isoformat()
+SpecResp = {
+    "spectrumSchedules": [
+    {
+    "eventTime": {
+    "startTime": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z', 
+    "stopTime":  (datetime.datetime.utcnow().replace(microsecond=0) + timedelta(hours=2, days = 6)).isoformat() + 'Z' 
+    },
+    "technology": "LTE",
+    "band": "20",
+    "duplex": "FDD",
+    
+    "spectra": [
+    {
+        "resolutionBwHz": 3e6,
+    "profilesHz": [ pawscFunction.get_spectrum('Band20', 'LTE', 0.2)
+    #[
+    #{"Dhz": 7.910e8, "UHz":8.320e8, "Ddbm": 23.0, "Udbm": 15.0}, 
+    #{"Dhz": 7.970e8, "UHz":8.380e8, "Ddbm": 23.0, "Udbm": 15.0}
+    #],
+    #[
+    #{"Dhz": 8.050e8, "UHz":8.460e8, "Ddbm": 30.0, "Udbm": 20.0},
+    #{"Dhz": 8.140e8, "UHz":8.550e8, "Ddbm": 30.0, "Udbm": 20.0}
+    #]
+    ]
+   # "profilesN": [
+   # [
+   # {"DARFCN": 6165, "UARFCN": 24165, "Ddbm": 23.0, "Udbm": 15.0}, 
+   # {"DARFCN": 6195, "UARFCN": 24195, "Ddbm": 23.0, "Udbm": 15.0} 
+   # ],
+   # [
+   # {"DARFCN": 6305, "UARFCN": 24305, "Ddbm": 30.0, "Udbm": 20.0},
+   # {"DARFCN": 6365, "UARFCN": 24365, "Ddbm": 30.0, "Udbm": 20.0} 
+   # ]
+   # ]            
+    }
+    ]
+    }
+        
+    ]
+    
+
 }
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -109,60 +175,103 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
-
 class InitViewSet(APIView):
-   
-    def Method_Init_Req(self,params,RD):
-        print('Received INIT_REQ')
-        RD['data'] = 'Received INIT_REQ'
-        return RD
     
-    def Method_Spec_Req(self,params,RD):
+    def Method_Device_Reg(self, params):
+        #register device assuming criteria is met
+        #display appropriate status message 
+        print('Received REGISTRATION_REQ')
+        #detail = params.body.decode('utf-8')
+        serial_number_value = params['serial_number']
+        location_value = params['location']
+        antenna_characteristics_value = params['antenna_characteristics']
+        device_type_value = params['device_type']
+        device_capabilities_value = params['device_capabilities']
+        device_description_value = params['device_description']
+        detail = RegisteredDevices(serial_number= serial_number_value, location = location_value, antenna_characteristics = antenna_characteristics_value, device_type = device_type_value, device_capabilities= device_capabilities_value, device_description = device_description_value)
+        #data =json.loads(params)
+        #values = RegisteredDevices(detail)
+      
+        detail.save()
+       
+        RD = JsonResponse({"resulst": "ok"})
+        #return transaction results i.e. successful or error message
+        #return RD
+        return {"type": "REGISTRATION_RES"}
+
+
+    def Method_Init_Req(self,params):
+        print('Received INIT_REQ')
+        return {"type": "INIT_RESP"} #???
+
+    def Method_Spec_Req(self,params):
         print('Received SPEC_REQ')
-        RD = SpecResp
-        #RD['data'] = 'Received SPEC_REQ'
-        return RD
+        return SpecResp
 
-
-    def Unknown_Req(self,params,RD):
+    def Unknown_Req(self,params):
         print('Received Unknown Method: ', params)
-        RD['error'] = 'Unknown Method: ' + params
-        return RD
+        return {'code': 'xxx', 'message': 'Unknown Method: ' + params, 'data': 'zzz'}
 
-    def Malformed_Req(self,RD):
+    def Malformed_Req(self):
         print('Received Malformed Request')
-        RD['error'] = 'MALFORMED_REQUEST: No Method'
-        return RD
+        return {'code': 'xxx', 'message': 'MALFORMED_REQUEST', 'data': 'zzz'}
 
 
     def get(self, request, format=None):
-      return Response('GET NOT IMPLMENTED')
+        return Response('GET NOT IMPLMENTED')
 
-       
+
     def post(self, request, format=None):
-        RD = {
-            'jsonrpc': '2.0',
-            'id': '45455'
-        }
 
         PostString = request.data
         print(PostString)
-        
 
-        if (('method' in PostString) and ('params' in PostString)):
-            PAWSCMethod = PostString['method']
-            PAWSCParams = PostString['params']
+        RD = PawscJson('2.0')
+        if ('id' in PostString):
+            JsonID = PostString['id']
+            RD.IDSet(JsonID)
 
-            print('Received: ', PAWSCMethod, PAWSCParams)
+            if (('method' in PostString) and ('params' in PostString)):
+                PAWSCMethod = PostString['method']
+                PAWSCParams = PostString['params']
+                print('Received: ', PAWSCMethod, PAWSCParams)
 
-            if (PAWSCMethod == constants.MethodNameInit):
-                RD = self.Method_Init_Req(PAWSCParams,RD)
-            elif (PAWSCMethod == constants.MethodNameAvailableSpectrum):
-                RD = self.Method_Spec_Req(PAWSCParams,RD)
+                if (PAWSCMethod == constants.MethodNameInit):
+                    Result = self.Method_Init_Req(PAWSCParams)
+                    RD.MethodSet(constants.MethodNameInit)
+                    RD.ParamSet(Result)
+
+                elif (PAWSCMethod == constants.MethodNameAvailableSpectrum):
+                    #print ('hello ')
+                    #pawscFunction.get_spectrum()
+                    Result = self.Method_Spec_Req(PAWSCParams)
+                    RD.MethodSet(constants.MethodNameAvailableSpectrum)
+                    RD.ParamSet(Result)
+
+                # Add more methods here
+                elif (PAWSCMethod == constants.MethodNameRegister):
+                    Result = self.Method_Device_Reg(PAWSCParams)
+                    RD.MethodSet(constants.MethodNameRegister)
+                    RD.ParamSet(Result)                             
+
+                # Case for method not known
+                else:
+                    Result = self.Unknown_Req(PAWSCMethod)
+                    RD.ErrorSet(constants.ExceptionMessageInvalidMethod)
+                    RD.ParamSet(Result)
+
+            # Case fo malformed request
             else:
-                RD = self.Unknown_Req(PAWSCMethod,RD)
+                Result = self.Malformed_Req()
+                RD.ErrorSet(constants.ExceptionMessageParametersRequired)
+                RD.ParamSet(Result)
+
+        # Case of malformed request
         else:
-            RD = self.Malformed_Req(RD)
-           
-        
-        return Response(RD)
+            Result = self.Malformed_Req()
+            RD.ErrorSet(constants.ExceptionMessageParametersRequired)
+            RD.ParamSet(Result)
+
+        print(RD.Get())
+        return Response(RD.Get())
+    
