@@ -31,6 +31,7 @@ ErrorMessageModeNotImplemented = "Device Mode not Implemented"
 ErrorMessageDatabaseUnsupported = "The Database does not support the specified version of the message."
 ErrorMessagDeviceIdNotAuthorized = "Device is not authorized"
 
+
 ExceptionMessageInvalidMethod = "Invalid method"
 ExceptionMessageParametersRequired = "Parameters Required";
 

@@ -4,8 +4,9 @@ class ErrorHelper():
    
    def __init__(self):
         self.errormsg = msg
-        self.errorResult = PAWSCMessage()
+        self.errorResult = PAWSCMessage('2.0')
 
+    
     '''def GetError(self, errorMessage)
         errorResult
         

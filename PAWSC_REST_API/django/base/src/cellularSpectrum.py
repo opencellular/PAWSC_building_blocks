@@ -77,9 +77,9 @@ def  convertCellular(freqRanges, spectrumRES, technology, band):
 
     
     # Align cellular white space to FDD if tech is FDD
-    print ('Cellular white space with no FDD')
-    print ('DL :', cell_ws_DL)
-    print ('UL :', cell_ws_UL)
+    #print ('Cellular white space with no FDD')
+    #print ('DL :', cell_ws_DL)
+    #print ('UL :', cell_ws_UL)
     
     # Find downlink shadow block for uplink block
     cell_ws_UL_shadow = []
@@ -95,9 +95,9 @@ def  convertCellular(freqRanges, spectrumRES, technology, band):
         shadow_high = dl_blocks[2] - spacing
         cell_ws_DL_shadow.append([shadow_low,shadow_high])
 
-    print ('Cellular white space shadow spectrum')
-    print ('DL shadow :', cell_ws_DL_shadow)
-    print ('UL shadow :', cell_ws_UL_shadow)
+    #print ('Cellular white space shadow spectrum')
+    #print ('DL shadow :', cell_ws_DL_shadow)
+    #print ('UL shadow :', cell_ws_UL_shadow)
 
 
 
@@ -138,14 +138,14 @@ def  convertCellular(freqRanges, spectrumRES, technology, band):
         DL_shadow_start = DL_shadow_pair[0]
         DL_shadow_end = DL_shadow_pair[1]
 
-        print (DL_shadow_start, DL_shadow_end)
+        #print (DL_shadow_start, DL_shadow_end)
         for ws_UL_pair in cell_ws_UL:
             UL_start = ws_UL_pair[0]
             UL_start_db = ws_UL_pair[1]
             UL_end = ws_UL_pair[2]
             UL_end_db = ws_UL_pair[3]
 
-            print ('UL start, end: ',UL_start, UL_end)
+            #print ('UL start, end: ',UL_start, UL_end)
 
             if UL_start >= DL_shadow_start and UL_end <= DL_shadow_end: 
                 startHz = UL_start
@@ -165,37 +165,102 @@ def  convertCellular(freqRanges, spectrumRES, technology, band):
                 cell_ws_UL_final.append([startHz,UL_start_db,endHz,UL_end_db])
     
     
-    print ('Final Cellular white space ')
-    print ('DL :', cell_ws_DL_final)
-    print ('UL :', cell_ws_UL_final)
+    #print ('Final Cellular white space ')
+    #print ('DL :', cell_ws_DL_final)
+    #print ('UL :', cell_ws_UL_final)
 
     # Request arfcn cellular blocks
     
 
     # Build up a spectra section of AVAIL_SPECTRUM_RESP
     spectra = []
+   
+
     for freqProfile in freqRanges:
         chwidth = int(freqProfile['channelWidthHz']/1000000)
         spectra_entry = {}
+        profilesHz = []
+        profilesN = []
         for DBlock, UBlock in zip(cell_ws_DL_final, cell_ws_UL_final):
-  
-            Dfreq_start = int(DBlock[0]/1000000)
-            Dpower_start = DBlock[1] 
-            Dfreq_end = int(DBlock[2]/1000000)
-            Dpower_end = DBlock[3]
-            Upower_start = int(UBlock[0]/1000000)
-            Dpower_start = UBlock[1] 
-            Upower_end = int(UBlock[2]/1000000)
-            Dpower_end = UBlock[3]
-            
+            #print (DBlock,UBlock)
+            Dfreq_start = round(DBlock[0]/100000000,3)
+            Dfreq_start_pawsc = str(Dfreq_start) + 'e8'
+
+            Dpower_start = round(DBlock[1],1)
+
+            Dfreq_end = round(DBlock[2]/100000000,3)
+            Dfreq_end_pawsc = str(Dfreq_end) + 'e8'
+
+            Dpower_end = round(DBlock[3],1)
+
+            Ufreq_start = round(UBlock[0]/100000000,3)
+            Ufreq_start_pawsc = str(Ufreq_start) + 'e8'
+          
+
+            Upower_start = round(UBlock[1],1)
+
+            Ufreq_end = round(UBlock[2]/100000000,3)
+            Ufreq_end_pawsc = str(Ufreq_end) + 'e8'
+
+            Upower_end = round(UBlock[3],1)
+
             # Check if channel width fits in available spectrum 
-            if Dfreq_end-Dfreq_start > chwidth:
+            if (Dfreq_end-Dfreq_start)*100 > chwidth:
                 if not('resolutionBwHz' in spectra_entry):
                     chwidth_pawsc = str(chwidth) + 'e6'
                     spectra_entry['resolutionBwHz'] = chwidth_pawsc
-                
+                profilePair = []
+                profileEntry = {}
+            
+                profileEntry['Dhz'] =  Dfreq_start_pawsc
+                profileEntry['Uhz'] =  Ufreq_start_pawsc
+                profileEntry['Ddbm'] = Dpower_start
+                profileEntry['Udbm'] = Upower_start
+                profilePair.append(profileEntry)
+               
+
+                profileEntry = {}
+                profileEntry['Dhz'] =  Dfreq_end_pawsc
+                profileEntry['Uhz'] =  Ufreq_end_pawsc
+                profileEntry['Ddbm'] = Dpower_end
+                profileEntry['Udbm'] = Upower_end
+                profilePair.append(profileEntry)
+               
+
+                profilesHz.append(profilePair)
+
+                # Get the arfcn values
+                res  = FreqRangeToArfcnRange(band,technology,Dfreq_start*100,Dfreq_end*100,chwidth)
+                profilePair = []
+                profileEntry = {}
+                profileEntry['DARFCN'] = res['arfcn_start']['arfcn_DL']
+                profileEntry['UARFCN'] = res['arfcn_start']['arfcn_UL']
+                profileEntry['Ddbm'] = Dpower_start
+                profileEntry['Udbm'] = Upower_start
+                profilePair.append(profileEntry)
+
+                profileEntry = {}
+                profileEntry['DARFCN'] = res['arfcn_end']['arfcn_DL']
+                profileEntry['UARFCN'] = res['arfcn_end']['arfcn_UL']
+                profileEntry['Ddbm'] = Dpower_end
+                profileEntry['Udbm'] = Upower_end
+                profilePair.append(profileEntry)
+
+                profilesN.append(profilePair)
+
+            if len(profilesHz) > 0:
+                spectra_entry['profilesHz'] = profilesHz
+                spectra_entry['profilesN'] = profilesN
+
+        if spectra_entry:
+            spectra.append(spectra_entry)
+
+    return spectra
 
 
+
+
+    '''
     # Downlink
     for cell_block in cell_ws_DL_final:
         freq_start = int(cell_block[0]/1000000)
@@ -216,3 +281,4 @@ def  convertCellular(freqRanges, spectrumRES, technology, band):
         
             res  = FreqRangeToArfcnRange(band,technology,freq_start,freq_end,chwidth)
             print ('ARFCN UL result: ', res)
+    '''

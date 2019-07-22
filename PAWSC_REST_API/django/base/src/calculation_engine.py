@@ -51,7 +51,7 @@ def getSpectrum_CSIR(databaseID, apiKey, height_type, height, latitude, longitud
     
    
     headerdata = ['Content-Type:application/json']
-    print (postdata)
+    #print (postdata)
 
     headers={'Content-type': 'application/json; charset=UTF-8'}
     r = requests.post (calc_url, data=json.dumps(postdata),headers=headers)
@@ -65,7 +65,7 @@ def getSpectrumGLSD(calcEngine, latitude, longitude, height_type, height):
         rawresult = getSpectrum_CSIR("UCT-ZA","7f9f3dcb-5a09-463b-b105-d49df68e67ff",\
         height_type,height,latitude,longitude,"SN504","MN110","FCC110")
 
-    print (rawresult)
+    #print (rawresult)
     rawresult_json = json.loads(rawresult)
     if not('error' in rawresult):
         if ('spectrumSpecs' in rawresult):

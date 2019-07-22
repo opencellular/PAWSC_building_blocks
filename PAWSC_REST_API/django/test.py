@@ -1,7 +1,11 @@
-from base.src import constants
-from base.src.arfcn import FreqRangeToArfcnRange
-from base.src.calculation_engine import getSpectrumGLSD
-from base.src.cellularSpectrum import convertCellular
+#from base.src import constants
+#from base.src.arfcn import FreqRangeToArfcnRange
+#from base.src.calculation_engine import getSpectrumGLSD
+#from base.src.cellularSpectrum import convertCellular
+
+
+
+from base.src.AvailableSpectrumRequest import AvailSpecReq
 
 # Experiments
 # res = getSpectrumGLSD('CSIR',-34,18,'AGL',3)
@@ -14,15 +18,17 @@ from base.src.cellularSpectrum import convertCellular
 # res = getSpectrumGLSD('CSIR',-34.127162,18.427468,'AGL',2)
 
 # Philipstown
-#res = getSpectrumGLSD('CSIR',-30.436547,24.472518,'AGL',30)
+
+# res = getSpectrumGLSD('CSIR',-30.436547,24.472518,'AGL',30)
 
 # Mankosi
 # res = getSpectrumGLSD('CSIR',-31.910233,29.170580,'AGL',5)
 
-# resCellular  = convertCellular([{'channelWidthHz': 5000000},{'channelWidthHz': 10000000}], res, 'LTE', 'Band20')
+#resCellular  = convertCellular([{'channelWidthHz': 5000000},{'channelWidthHz': 10000000}], res, 'LTE', 'Band20')
 
-foo = (1, 2, 3)
-bar = (4, 5, 6)
+#print (resCellular)
 
-for f, b in zip(foo, bar):
-    print(f, b)
+res = AvailSpecReq({'test': 1})
+print()
+print()
+print(res)
