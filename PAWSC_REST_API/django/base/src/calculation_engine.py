@@ -1,4 +1,4 @@
-import pycurl,re, json
+import re, json
 import requests
 from io import BytesIO
 import sys
