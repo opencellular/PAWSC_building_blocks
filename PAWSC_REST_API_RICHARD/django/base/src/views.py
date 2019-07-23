@@ -121,7 +121,7 @@ SpecResp = {
     {
     "eventTime": {
     "startTime": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z', 
-    "stopTime":  (datetime.datetime.utcnow().replace(microsecond=0) + timedelta(hours=2, days = 6)).isoformat() + 'Z' 
+    "stopTime":  (datetime.datetime.utcnow().replace(microsecond=0) + timedelta(hours=6, days = 0)).isoformat() + 'Z' 
     },
     "technology": "LTE",
     "band": "20",
@@ -129,7 +129,7 @@ SpecResp = {
     
     "spectra": [
     {
-        "resolutionBwHz": 3e6,
+        "resolutionBwHz": 2e6, #3e6,
     "profilesHz": [ pawscFunction.get_spectrum('Band20', 'LTE', 0.2)
     #[
     #{"Dhz": 7.910e8, "UHz":8.320e8, "Ddbm": 23.0, "Udbm": 15.0}, 

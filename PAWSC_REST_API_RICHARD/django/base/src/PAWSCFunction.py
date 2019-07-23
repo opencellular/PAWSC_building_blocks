@@ -26,7 +26,8 @@ class pawscFunction:
             data = UnassignedFreq.objects.all().values("freqstart", "freqend").filter(band = 900)
         """      
        
-        data = UnassignedFreq.objects.all().values("freqstart", "freqend").filter(band = 900)
+        data = UnassignedFreq.objects.all().values("freqstart", "freqend")
+        #data = UnassignedFreq.objects.all().values("freqstart", "freqend").filter(band = 900
         freq_ranges = []
         freq_ranges_Hz = []
         for item in data: #UnassignedFreq.objects.all().values("freqstart", "freqend"):
