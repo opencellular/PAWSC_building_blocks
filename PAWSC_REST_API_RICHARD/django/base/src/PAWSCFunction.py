@@ -36,7 +36,14 @@ class pawscFunction:
         To fetch subset e.g. for specific band:          
         if (freq_band == '900E' ):
             data = UnassignedFreq.objects.all().values("freqstart", "freqend").filter(band = 900)
-        """      
+        """    
+        '''
+        Initialise some semi-local temporal variables to work with
+        '''
+        temp_FUL_low = 0
+        temp_FUL_high = 0            
+        temp_FDL_low = 0
+        temp_FDL_high = 0        
        
         data = UnassignedFreq.objects.all().values("freqstart", "freqend").filter(band = 900)
         #data = UnassignedFreq.objects.all().values("freqstart", "freqend").filter(band = 900
@@ -51,12 +58,13 @@ class pawscFunction:
             For now, we assume 'tech' == gsm
             '''
             '''
-            Initialise some variables to work with
+            Initialise some temporal local variables to work with
             '''
             FUL_low = 0
             FUL_high = 0            
             FDL_low = 0
             FDL_high = 0
+                                    
             #print ('FUL_low:', GSM_arfcn_table[freq_band]['FUL_low'])
             #print ('FUL_low:', GSM_arfcn_table[freq_band]['FUL_high'])
             if freq_band == '900E':
@@ -84,9 +92,36 @@ class pawscFunction:
                         FDL_high = GSM_arfcn_table[freq_band]['FDL_high']
                     else:
                         FDL_high = item['freqend'] #later ensure that uhz-dhz range is multiple of 0.2e6                        
-                        
-                freq_ranges_Hz.append([{'UHz': FUL_low, 'DHz': FDL_low}, {'UHz': FUL_high, 'DHz': FDL_high}])
+                '''
+                Attemping to shift the values to avoid this kind of output: 
+                [{"DHz": 0, "UHz": 880.2 }, {"DHz": 0, "UHz": 889} ], [{ "DHz": 925.2, "UHz": 0}, {"DHz": 934,"UHz": 0}]
+                '''                 
+            if (FDL_low == 0) and (FDL_high == 0) and (FUL_low != 0) and (FUL_high != 0):
+                if (temp_FDL_low != 0) and (temp_FDL_high != 0):
+                    freq_ranges_Hz.append([{'UHz': FUL_low*1000000, 'DHz': temp_FDL_low*1000000, "Ddbm": 23.0, "Udbm": 15.0}, {'UHz': FUL_high*1000000, 'DHz': temp_FDL_high*1000000, "Ddbm": 23.0, "Udbm": 15.0}])
+                    temp_FDL_low = 0 #reset the temporal variables
+                    temp_FDL_high = 0
+                else:
+                    temp_FUL_low = FUL_low
+                    temp_FUL_high = FUL_high                    
+                                   
+              
+                
+            if (FUL_low == 0) and (FUL_high == 0) and (FDL_low != 0) and (FDL_high != 0):
+                if (temp_FUL_low != 0) or (temp_FUL_high != 0):
+                    freq_ranges_Hz.append([{'UHz': temp_FUL_low*1000000, 'DHz': FDL_low*1000000, "Ddbm": 23.0, "Udbm": 15.0}, {'UHz': temp_FUL_high*1000000, 'DHz': FDL_high*1000000, "Ddbm": 23.0, "Udbm": 15.0}])
+                    temp_FUL_low = 0 #reset the temporal variables
+                    temp_FUL_high = 0                    
+                else:                   
+                    temp_FDL_low = FDL_low
+                    temp_FDL_high = FDL_high                                    
+                
+                
+                
+            if (FDL_low != 0) and (FDL_high != 0) and (FUL_low != 0) and (FUL_high != 0):
+                freq_ranges_Hz.append([{'UHz': FUL_low, 'DHz': FDL_low, "Ddbm": 23.0, "Udbm": 15.0}, {'UHz': FUL_high, 'DHz': FDL_high, "Ddbm": 23.0, "Udbm": 15.0}])
             #freq_ranges_Hz.append({'freqstart': item['freqstart']*1000000, 'freqend': item['freqend']*1000000})
+            #freq_ranges_Hz.append([{'UHz': FUL_low, 'DHz': FDL_low}, {'UHz': FUL_high, 'DHz': FDL_high}])
         #print (freq_ranges)
         #for item in UnassignedFreq.objects.all().values("freqstart", "freqend"):
             #print item
