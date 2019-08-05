@@ -23,6 +23,20 @@ class RegisteredDevices(models.Model):
         managed = False
         db_table = 'registered_devices'
 
+class InitialisedDevices(models.Model):
+    serial_number = models.TextField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    antenna_height = models.FloatField(blank=True, null=True)
+    antenna_type = models.TextField(blank=True, null=True)
+    device_type = models.TextField(blank=True, null=True)
+    device_capabilities = models.TextField(blank=True, null=True)
+    device_description = models.TextField(blank=True, null=True)
+    time = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'initialised_devices'
 
 class DynamicFreqAssignment(models.Model):
     id = models.TextField(db_column='ID', primary_key=True)  # Field name made lowercase. This field type is a guess.

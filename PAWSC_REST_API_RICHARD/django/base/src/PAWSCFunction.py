@@ -2,8 +2,9 @@
 This file contains essential functions to process pawsc requests
 """
 import json
-from base.src.models import UnassignedFreq
+from base.src.models import * #UnassignedFreq
 from base.src.arfcn import FreqRangeToArfcnRange
+import datetime
 
 LTE_arfcn_table = {
     'Band1':{'FDL_low':2110, 'NOffs-DL':0, 'FUL_low': 1920, 'NOffs-UL':18000, 'spacing': 190},
@@ -144,8 +145,8 @@ class pawscFunction:
         #return str(freq_ranges).strip("[ ]")      
         
 
-    def __init__(self):
-        """Constructor"""
+    #def __init__(self):
+     #   """Constructor"""
 
     def get_spectrum(freq_band,tech,bw):
         """
@@ -193,9 +194,44 @@ class pawscFunction:
         """
         May need to strip off the brackets depending on output format requirements
         """    
-        #return str(freq_ranges).strip("[ ]")      
-        
-
+        #return str(freq_ranges).strip("[ ]")   
+    
+    '''
+      serve INIT_REQ
+    ''' 
+    def device_init(self,params):
+        if RegisteredDevices.objects.filter(serial_number = params['deviceDesc']['serialNumber']).exists():
+            init_resp = {
+                            "type": "INIT_RESP",
+                            "rulesetInfo": {
+                                "authority": "???",
+                                "rulesetId": "???",
+                                "maxLocationChange": 0.00,
+                                "maxPollingSec": 0
+                               }
+                        }  
+            '''
+            mark device as initialised if not initialised already
+            ''' 
+            if InitialisedDevices.objects.filter(serial_number = params['deviceDesc']['serialNumber']).exists():
+                print ('Device is initialised already') 
+            else:
+                InitialisedDevices(serial_number=params['deviceDesc']['serialNumber'], 
+                                   latitude=params['location']['point']['center']['latitude'], 
+                                   longitude=params['location']['point']['center']['longitude'], 
+                                   antenna_height=params['antenna']['height'], 
+                                   antenna_type=params['antenna']['heightType'],
+                                   #<other parameters>
+                                   time = datetime.datetime.utcnow().replace(microsecond=0).isoformat()).save()
+        else: #if device is not registered with authority
+            init_resp = {
+                "type": "INIT_RESP",
+                "rulesetInfo": "<device is not registered type of error message>"            
+            } 
+            
+        return init_resp
+     
+     
     def __init__(self):
         """Constructor"""
-    
+

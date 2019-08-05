@@ -116,7 +116,7 @@ SpecResp_ORIGINAL_IDEA = {
 }
 
 start_time = datetime.datetime.now().isoformat()
-SpecResp = {
+spec_resp = {
     "spectrumSchedules": [
     {
     "eventTime": {
@@ -160,6 +160,8 @@ SpecResp = {
 
 }
 
+
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -189,25 +191,33 @@ class InitViewSet(APIView):
         device_type_value = params['device_type']
         device_capabilities_value = params['device_capabilities']
         device_description_value = params['device_description']
+        '''
+        Unless 'serial_number' and other local variables are being used somewhere, 
+        consider pluging 'params['serial_number']' directly into line where serial_number value is needed
+        '''
         detail = RegisteredDevices(serial_number= serial_number_value, location = location_value, antenna_characteristics = antenna_characteristics_value, device_type = device_type_value, device_capabilities= device_capabilities_value, device_description = device_description_value)
         #data =json.loads(params)
         #values = RegisteredDevices(detail)
       
         detail.save()
        
-        RD = JsonResponse({"resulst": "ok"})
+        RD = JsonResponse({"results": "ok"})
         #return transaction results i.e. successful or error message
         #return RD
         return {"type": "REGISTRATION_RES"}
 
 
     def Method_Init_Req(self,params):
-        print('Received INIT_REQ')
-        return {"type": "INIT_RESP"} #???
+        print('Received INIT_REQ')              
+        print ("Parameters :", params['deviceDesc']['serialNumber']) #focus on serialNumber in deviceDesc
+        #return init_resp
+        #return pawscFunction.device_init(params['deviceDesc']['serialNumber']) #focus on serialNumber in deviceDesc
+        return pawscFunction.device_init(self, params)
+        #return {"type": "INIT_RESP"} #???
 
     def Method_Spec_Req(self,params):
         print('Received SPEC_REQ')
-        return SpecResp
+        return spec_resp
 
     def Unknown_Req(self,params):
         print('Received Unknown Method: ', params)
