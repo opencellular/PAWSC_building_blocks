@@ -10,8 +10,8 @@ from base.src.models import RegisteredDevices
 #from django.apps import apps
 #RegisteredDevices = apps.get_model(app_label='rest_framework', model_name='RegisteredDevices')
 
-from base.src.PAWSCFunction import pawscFunction
-#from time import gmtime, strftime
+from base.src.PAWSCManager import pawscFunction
+#from time import gmtime, strftime 
 import datetime
 from datetime import timedelta
 
@@ -116,7 +116,7 @@ SpecResp_ORIGINAL_IDEA = {
 }
 
 start_time = datetime.datetime.now().isoformat()
-SpecResp = {
+spec_resp = {
     "spectrumSchedules": [
     {
     "eventTime": {
@@ -160,6 +160,8 @@ SpecResp = {
 
 }
 
+
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -178,36 +180,23 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 class InitViewSet(APIView):
     
-    def Method_Device_Reg(self, params):
-        #register device assuming criteria is met
-        #display appropriate status message 
-        print('Received REGISTRATION_REQ')
-        #detail = params.body.decode('utf-8')
-        serial_number_value = params['serial_number']
-        location_value = params['location']
-        antenna_characteristics_value = params['antenna_characteristics']
-        device_type_value = params['device_type']
-        device_capabilities_value = params['device_capabilities']
-        device_description_value = params['device_description']
-        detail = RegisteredDevices(serial_number= serial_number_value, location = location_value, antenna_characteristics = antenna_characteristics_value, device_type = device_type_value, device_capabilities= device_capabilities_value, device_description = device_description_value)
-        #data =json.loads(params)
-        #values = RegisteredDevices(detail)
-      
-        detail.save()
-       
-        RD = JsonResponse({"resulst": "ok"})
-        #return transaction results i.e. successful or error message
-        #return RD
-        return {"type": "REGISTRATION_RES"}
+    def Method_Device_Reg(self, params):        
+        print('Received REGISTRATION_REQ')         
+        #return {"type": "REGISTRATION_RES"}
+        return pawscFunction.register_device(self, params)
 
 
     def Method_Init_Req(self,params):
-        print('Received INIT_REQ')
-        return {"type": "INIT_RESP"} #???
+        print('Received INIT_REQ')              
+        print ("Parameters :", params['deviceDesc']['serialNumber']) #focus on serialNumber in deviceDesc
+        #return init_resp
+        #return pawscFunction.device_init(params['deviceDesc']['serialNumber']) #focus on serialNumber in deviceDesc
+        return pawscFunction.device_init(self, params)
+        #return {"type": "INIT_RESP"} #???
 
     def Method_Spec_Req(self,params):
         print('Received SPEC_REQ')
-        return SpecResp
+        return spec_resp
 
     def Unknown_Req(self,params):
         print('Received Unknown Method: ', params)
