@@ -10,8 +10,8 @@ from base.src.models import RegisteredDevices
 #from django.apps import apps
 #RegisteredDevices = apps.get_model(app_label='rest_framework', model_name='RegisteredDevices')
 
-from base.src.PAWSCFunction import pawscFunction
-#from time import gmtime, strftime
+from base.src.PAWSCManager import pawscFunction
+#from time import gmtime, strftime 
 import datetime
 from datetime import timedelta
 
@@ -180,31 +180,10 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 class InitViewSet(APIView):
     
-    def Method_Device_Reg(self, params):
-        #register device assuming criteria is met
-        #display appropriate status message 
-        print('Received REGISTRATION_REQ')
-        #detail = params.body.decode('utf-8')
-        serial_number_value = params['serial_number']
-        location_value = params['location']
-        antenna_characteristics_value = params['antenna_characteristics']
-        device_type_value = params['device_type']
-        device_capabilities_value = params['device_capabilities']
-        device_description_value = params['device_description']
-        '''
-        Unless 'serial_number' and other local variables are being used somewhere, 
-        consider pluging 'params['serial_number']' directly into line where serial_number value is needed
-        '''
-        detail = RegisteredDevices(serial_number= serial_number_value, location = location_value, antenna_characteristics = antenna_characteristics_value, device_type = device_type_value, device_capabilities= device_capabilities_value, device_description = device_description_value)
-        #data =json.loads(params)
-        #values = RegisteredDevices(detail)
-      
-        detail.save()
-       
-        RD = JsonResponse({"results": "ok"})
-        #return transaction results i.e. successful or error message
-        #return RD
-        return {"type": "REGISTRATION_RES"}
+    def Method_Device_Reg(self, params):        
+        print('Received REGISTRATION_REQ')         
+        #return {"type": "REGISTRATION_RES"}
+        return pawscFunction.register_device(self, params)
 
 
     def Method_Init_Req(self,params):

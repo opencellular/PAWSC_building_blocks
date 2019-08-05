@@ -13,11 +13,11 @@ from django.db import models
 '''
 class RegisteredDevices(models.Model):
     serial_number = models.TextField(blank=True, null=True)
-    location = models.TextField(blank=True, null=True)
-    antenna_characteristics = models.TextField(blank=True, null=True)
-    device_type = models.TextField(blank=True, null=True)
-    device_capabilities = models.TextField(blank=True, null=True)
-    device_description = models.TextField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    antenna_height = models.FloatField(blank=True, null=True)
+    antenna_type = models.TextField(blank=True, null=True)  
+    date = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False

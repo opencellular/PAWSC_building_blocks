@@ -231,7 +231,36 @@ class pawscFunction:
             
         return init_resp
      
-     
+    '''
+    serve REGISTRATION_REQ
+    '''
+    def register_device(self, params):
+        if RegisteredDevices.objects.filter(serial_number = params['deviceDesc']['serialNumber']).exists():
+            print("Device registered already")
+            registration_resp = {
+                "type": "REGISTRATION_RESP",
+                "status": "Device already registered"
+            }
+       
+        else: 
+            RegisteredDevices(serial_number=params['deviceDesc']['serialNumber'], 
+                                   latitude=params['location']['point']['center']['latitude'], 
+                                   longitude=params['location']['point']['center']['longitude'], 
+                                   antenna_height=params['antenna']['height'], 
+                                   antenna_type=params['antenna']['heightType'],
+                                   #<other parameters>
+                                   date = datetime.datetime.utcnow().replace(microsecond=0).isoformat()).save()
+            
+            registration_resp = {
+                "type": "REGISTRATION_RESP",
+                "status": "Registration successfull"
+            } 
+        
+        """
+        In future validate all other necessary conditions required for registration 
+        """
+        return registration_resp
+    
     def __init__(self):
         """Constructor"""
 
