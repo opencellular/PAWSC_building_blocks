@@ -57,30 +57,32 @@ def  AvailSpecReq(params):
 
 				print ('coords: ',latitude,longitude)
 				resPawsC = SpecResp
+
+				# Get result from CSIR database
 				resGLSD = getSpectrumGLSD('CSIR',latitude,longitude,'AGL',30)
 
-				# Mankosi
-				# res = getSpectrumGLSD('CSIR',-31.910233,29.170580,'AGL',5)
+				# Get Cellular spectrum result using list of channel Widths requested
+				if 'capabilities' in params:
+					if 'ChannelWidths' in params['capabilities'] and 'technology' in params['capabilities'] and 'band' in params['capabilities']:
+						resCellular  = convertCellular(params['capabilities']['ChannelWidths'], resGLSD, params['capabilities']['technology'], params['capabilities']['band'])
+						print('result:',  resGLSD)
+						spectrumSchedule = []
+						spectrumScheduleEntry = {}
+						eventTime = {}
+						eventTime['startTime'] =  datetime.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
+						eventTime['stopTime'] = (datetime.datetime.utcnow().replace(microsecond=0) + timedelta(hours=2, days = 6)).isoformat() + 'Z'
+						spectrumScheduleEntry['eventTime'] = eventTime
+						spectrumScheduleEntry['technology'] = params['capabilities']['technology']
+						spectrumScheduleEntry['band'] = params['capabilities']['band']
+						spectrumScheduleEntry['duplex'] = 'FDD'
+						spectrumScheduleEntry['spectra'] =  resCellular
 
-				resCellular  = convertCellular([{'channelWidthHz': 5000000},{'channelWidthHz': 10000000}], resGLSD, 'LTE', 'Band20')
+						spectrumSchedule.append(spectrumScheduleEntry)
 
-				spectrumSchedule = []
-				spectrumScheduleEntry = {}
-				eventTime = {}
-				eventTime['startTime'] =  datetime.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
-				eventTime['stopTime'] = (datetime.datetime.utcnow().replace(microsecond=0) + timedelta(hours=2, days = 6)).isoformat() + 'Z'
-				spectrumScheduleEntry['eventTime'] = eventTime
-				spectrumScheduleEntry['technology'] = 'LTE'
-				spectrumScheduleEntry['band'] = 'Band20'
-				spectrumScheduleEntry['duplex'] = 'FDD'
-				spectrumScheduleEntry['spectra'] =  resCellular
-
-				spectrumSchedule.append(spectrumScheduleEntry)
-
-				resPawsC['location'] = location
-				resPawsC['spectrumSchedule'] = spectrumSchedule
-				
-				return resPawsC
+						resPawsC['location'] = location
+						resPawsC['spectrumSchedule'] = spectrumSchedule
+						
+						return resPawsC
 			
 	
 
