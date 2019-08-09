@@ -196,7 +196,8 @@ class InitViewSet(APIView):
 
     def Method_Spec_Req(self,params):
         print('Received SPEC_REQ')
-        return spec_resp
+        #return spec_resp
+        return pawscFunction.avail_spec_resp(self, params)
 
     def Unknown_Req(self,params):
         print('Received Unknown Method: ', params)
