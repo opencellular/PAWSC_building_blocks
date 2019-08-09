@@ -7,7 +7,7 @@ from base.src import constants
 from base.src.arfcn import FreqRangeToArfcnRange
 from base.src.calculation_engine import getSpectrumGLSD
 
-def  convertCellular(freqRanges, spectrumRES, technology, band):
+def  convertCellular(channelWidths, spectrumRES, technology, band):
     # Iterate through spectra
     
 
@@ -175,9 +175,8 @@ def  convertCellular(freqRanges, spectrumRES, technology, band):
     # Build up a spectra section of AVAIL_SPECTRUM_RESP
     spectra = []
    
-
-    for freqProfile in freqRanges:
-        chwidth = int(freqProfile['channelWidthHz']/1000000)
+    for cwProfile in channelWidths:
+        chwidth = int(cwProfile/1000000)
         spectra_entry = {}
         profilesHz = []
         profilesN = []
