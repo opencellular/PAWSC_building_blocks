@@ -204,11 +204,12 @@ class pawscFunction:
             init_resp = {
                             "type": "INIT_RESP",
                             "rulesetInfo": {
-                                "authority": "???",
-                                "rulesetId": "???",
+                                "authority": "MZ",
+                                "rulesetId": ["ICASATVWS-2018", "FccTvBandWhiteSpace-2010", "ETSI-EN-301-598-1.1.1"],
                                 "maxLocationChange": 0.00,
-                                "maxPollingSec": 0
-                               }
+                                "maxPollingSecs": 0
+                               },
+                            "dataBaseChange":{"dbUpdateSpec":{"databases":[{"databaseSpec":{"name":"OpenCellular","uri":"http://pawsc.info:8001/api/pawsc"}}]}}
                         }  
             '''
             mark device as initialised if not initialised already
