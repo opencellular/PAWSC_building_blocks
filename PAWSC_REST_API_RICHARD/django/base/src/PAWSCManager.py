@@ -241,7 +241,14 @@ class pawscFunction:
             print("Device registered already")
             registration_resp = {
                 "type": "REGISTRATION_RESP",
-                "status": "Device already registered"
+                "status": "Device already registered",
+                "rulesetInfo": {
+                    "authority": "MZ",
+                    "rulesetId": ["ICASATVWS-2018", "FccTvBandWhiteSpace-2010", "ETSI-EN-301-598-1.1.1"],
+                    "maxLocationChange": 0.00,
+                    "maxPollingSecs": 0
+                   },
+                "dataBaseChange":{"dbUpdateSpec":{"databases":[{"databaseSpec":{"name":"OpenCellular","uri":"http://pawsc.info:8001/api/pawsc"}}]}}                
             }
        
         else: 
@@ -255,7 +262,14 @@ class pawscFunction:
             
             registration_resp = {
                 "type": "REGISTRATION_RESP",
-                "status": "Registration successfull"
+                "status": "Registration successfull",
+                "rulesetInfo": {
+                    "authority": "MZ",
+                    "rulesetId": ["ICASATVWS-2018", "FccTvBandWhiteSpace-2010", "ETSI-EN-301-598-1.1.1"],
+                    "maxLocationChange": 0.00,
+                    "maxPollingSecs": 0
+                   },
+                "dataBaseChange":{"dbUpdateSpec":{"databases":[{"databaseSpec":{"name":"OpenCellular","uri":"http://pawsc.info:8001/api/pawsc"}}]}}                
             } 
         
         """

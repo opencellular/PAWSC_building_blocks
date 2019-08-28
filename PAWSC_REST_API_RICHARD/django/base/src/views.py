@@ -115,50 +115,7 @@ SpecResp_ORIGINAL_IDEA = {
 	}
 }
 
-start_time = datetime.datetime.now().isoformat()
-spec_resp = {
-    "spectrumSchedules": [
-    {
-    "eventTime": {
-    "startTime": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z', 
-    "stopTime":  (datetime.datetime.utcnow().replace(microsecond=0) + timedelta(hours=12, days = 0)).isoformat() + 'Z' 
-    },
-    "technology": "GSM",
-    "band": "900E",
-    "duplex": "FDD",
-    
-    "spectra": [
-    {
-        "resolutionBwHz": 0.2e6, #3e6,
-    #"profilesHz": [ pawscFunction.get_spectrum('Band20', 'LTE', 0.2)
-    "profilesHz": [ pawscFunction.get_spectrum_hz('900E', 'GSM', 0.2)
-    #[
-    #{"Dhz": 7.910e8, "UHz":8.320e8, "Ddbm": 23.0, "Udbm": 15.0}, 
-    #{"Dhz": 7.970e8, "UHz":8.380e8, "Ddbm": 23.0, "Udbm": 15.0}
-    #],
-    #[
-    #{"Dhz": 8.050e8, "UHz":8.460e8, "Ddbm": 30.0, "Udbm": 20.0},
-    #{"Dhz": 8.140e8, "UHz":8.550e8, "Ddbm": 30.0, "Udbm": 20.0}
-    #]
-    ],
-    "profilesN": [ pawscFunction.get_spectrum('900E', 'GSM', 0.2)
-   # [
-   # {"DARFCN": 6165, "UARFCN": 24165, "Ddbm": 23.0, "Udbm": 15.0}, 
-   # {"DARFCN": 6195, "UARFCN": 24195, "Ddbm": 23.0, "Udbm": 15.0} 
-   # ],
-   # [
-   # {"DARFCN": 6305, "UARFCN": 24305, "Ddbm": 30.0, "Udbm": 20.0},
-   # {"DARFCN": 6365, "UARFCN": 24365, "Ddbm": 30.0, "Udbm": 20.0} 
-   # ]
-    ]            
-    }
-    ]
-    }
-        
-    ]
-    
 
-}
 
 
 
