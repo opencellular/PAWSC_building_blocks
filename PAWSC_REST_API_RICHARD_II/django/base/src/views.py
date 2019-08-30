@@ -14,6 +14,7 @@ from base.src.PAWSCManager import pawscFunction
 #from time import gmtime, strftime 
 import datetime
 from datetime import timedelta
+from django import forms
 
 """
 TODO
@@ -177,6 +178,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    file = forms.FileField()
+
 
 class InitViewSet(APIView):
     
@@ -198,6 +203,10 @@ class InitViewSet(APIView):
         print('Received SPEC_REQ')
         #return spec_resp
         return pawscFunction.avail_spec_resp(self, params)
+    
+    def Method_scan_data_notify(self, params):
+        print('Received SCAN_DATA_NOTIFY')
+        return 0 #pawscFunction.upload_file(self, params)
 
     def Unknown_Req(self,params):
         print('Received Unknown Method: ', params)
@@ -205,7 +214,7 @@ class InitViewSet(APIView):
 
     def Malformed_Req(self):
         print('Received Malformed Request')
-        return {'code': 'xxx', 'message': 'MALFORMED_REQUEST', 'data': 'zzz'}
+        return pawscFunction.upload_file(self)#{'code': 'xxx', 'message': 'MALFORMED_REQUEST', 'data': 'zzz'}
 
 
     def get(self, request, format=None):
@@ -243,7 +252,12 @@ class InitViewSet(APIView):
                 elif (PAWSCMethod == constants.MethodNameRegister):
                     Result = self.Method_Device_Reg(PAWSCParams)
                     RD.MethodSet(constants.MethodNameRegister)
-                    RD.ParamSet(Result)                             
+                    RD.ParamSet(Result) 
+                
+                elif (PAWSCMethod == constants.MethodNameNotify):
+                    Result = self.Method_scan_data_notify(PAWSCParams)
+                    RD.MethodSet(constants.MethodNameNotify)
+                    RD.ParamSet(Result)
 
                 # Case for method not known
                 else:

@@ -6,6 +6,11 @@ from rest_framework import routers
 from base.src import views
 
 from base.src.views import  InitViewSet
+from base.src.views import UploadFileForm
+
+#upload stuff
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
 
@@ -16,6 +21,7 @@ router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
     path(r'pawsc', InitViewSet.as_view())
+  
 ]   
  
 urlpatterns += router.urls
