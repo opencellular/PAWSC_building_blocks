@@ -6,7 +6,7 @@ from rest_framework import routers
 from base.src import views
 
 from base.src.views import  InitViewSet
-from base.src.views import UploadFileForm
+#from base.src.views import UploadFileForm
 
 #upload stuff
 from django.conf import settings
@@ -20,7 +20,9 @@ router.register(r'groups', views.GroupViewSet)
 #router.register(r'titles', TitlesViewSet, base_name='titles')
 
 urlpatterns = [
-    path(r'pawsc', InitViewSet.as_view())
+    path(r'pawsc', InitViewSet.as_view()),
+    path(r'pawsc/upload', views.simple_upload, name='simple_upload'),
+     path(r'pawsc/home', views.home, name='home') 
   
 ]   
  

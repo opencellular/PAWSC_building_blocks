@@ -15,6 +15,8 @@ from base.src.PAWSCManager import pawscFunction
 import datetime
 from datetime import timedelta
 from django import forms
+from django.shortcuts import render, redirect
+from django.core.files.storage import FileSystemStorage
 
 """
 TODO
@@ -178,10 +180,26 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
-class UploadFileForm(forms.Form):
-    title = forms.CharField(max_length=50)
-    file = forms.FileField()
+#class UploadFileForm(forms.Form):
+#    title = forms.CharField(max_length=50)
+#    file = forms.FileField()
 
+def home(request):
+    documents = Document.objects.all()
+    return render(request, 'home.html', { 'documents': documents })
+
+def simple_upload(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'simple_upload.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
+    return render(request, 'simple_upload.html')
+
+ 
 
 class InitViewSet(APIView):
     
@@ -214,7 +232,7 @@ class InitViewSet(APIView):
 
     def Malformed_Req(self):
         print('Received Malformed Request')
-        return pawscFunction.upload_file(self)#{'code': 'xxx', 'message': 'MALFORMED_REQUEST', 'data': 'zzz'}
+        return {'code': 'xxx', 'message': 'MALFORMED_REQUEST', 'data': 'zzz'}
 
 
     def get(self, request, format=None):
