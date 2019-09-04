@@ -6,6 +6,11 @@ from base.src.models import * #UnassignedFreq
 from base.src.arfcn import FreqRangeToArfcnRange
 import datetime
 from datetime import timedelta
+#useful libs for the upload stuff
+#from django.http import HttpResponseRedirect
+
+
+
 
 LTE_arfcn_table = {
     'Band1':{'FDL_low':2110, 'NOffs-DL':0, 'FUL_low': 1920, 'NOffs-UL':18000, 'spacing': 190},
@@ -241,14 +246,7 @@ class pawscFunction:
             print("Device registered already")
             registration_resp = {
                 "type": "REGISTRATION_RESP",
-                "status": "Device already registered",
-                "rulesetInfo": {
-                    "authority": "MZ",
-                    "rulesetId": ["ICASATVWS-2018", "FccTvBandWhiteSpace-2010", "ETSI-EN-301-598-1.1.1"],
-                    "maxLocationChange": 0.00,
-                    "maxPollingSecs": 0
-                   },
-                "dataBaseChange":{"dbUpdateSpec":{"databases":[{"databaseSpec":{"name":"OpenCellular","uri":"http://pawsc.info:8001/api/pawsc"}}]}}                
+                "status": "Device already registered"
             }
        
         else: 
@@ -262,14 +260,7 @@ class pawscFunction:
             
             registration_resp = {
                 "type": "REGISTRATION_RESP",
-                "status": "Registration successfull",
-                "rulesetInfo": {
-                    "authority": "MZ",
-                    "rulesetId": ["ICASATVWS-2018", "FccTvBandWhiteSpace-2010", "ETSI-EN-301-598-1.1.1"],
-                    "maxLocationChange": 0.00,
-                    "maxPollingSecs": 0
-                   },
-                "dataBaseChange":{"dbUpdateSpec":{"databases":[{"databaseSpec":{"name":"OpenCellular","uri":"http://pawsc.info:8001/api/pawsc"}}]}}                
+                "status": "Registration successfull"
             } 
         
         """
@@ -334,6 +325,8 @@ class pawscFunction:
         
         return spec_resp
     
+
+                
     
     
     def __init__(self):

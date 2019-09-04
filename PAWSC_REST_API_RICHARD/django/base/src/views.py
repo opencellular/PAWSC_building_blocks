@@ -15,6 +15,15 @@ from base.src.PAWSCManager import pawscFunction
 import datetime
 from datetime import timedelta
 
+#file upload stuff
+from django import forms
+from django.shortcuts import render, redirect
+from django.core.files.storage import FileSystemStorage
+from django.views.decorators.csrf import csrf_exempt
+#from base.src.models import Document
+#from base.src.forms import DocumentForm
+
+
 """
 TODO
 1) extract 'band', 'tech' and 'bw' from AVAILABLE_SPECTRUM_REQ and use in function call pawscFunction.get_spectrum('900E', 'GSM', 0.2)
@@ -115,7 +124,50 @@ SpecResp_ORIGINAL_IDEA = {
 	}
 }
 
+start_time = datetime.datetime.now().isoformat()
+spec_resp = {
+    "spectrumSchedules": [
+    {
+    "eventTime": {
+    "startTime": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z', 
+    "stopTime":  (datetime.datetime.utcnow().replace(microsecond=0) + timedelta(hours=12, days = 0)).isoformat() + 'Z' 
+    },
+    "technology": "GSM",
+    "band": "900E",
+    "duplex": "FDD",
+    
+    "spectra": [
+    {
+        "resolutionBwHz": 0.2e6, #3e6,
+    #"profilesHz": [ pawscFunction.get_spectrum('Band20', 'LTE', 0.2)
+    "profilesHz": [ pawscFunction.get_spectrum_hz('900E', 'GSM', 0.2)
+    #[
+    #{"Dhz": 7.910e8, "UHz":8.320e8, "Ddbm": 23.0, "Udbm": 15.0}, 
+    #{"Dhz": 7.970e8, "UHz":8.380e8, "Ddbm": 23.0, "Udbm": 15.0}
+    #],
+    #[
+    #{"Dhz": 8.050e8, "UHz":8.460e8, "Ddbm": 30.0, "Udbm": 20.0},
+    #{"Dhz": 8.140e8, "UHz":8.550e8, "Ddbm": 30.0, "Udbm": 20.0}
+    #]
+    ],
+    "profilesN": [ pawscFunction.get_spectrum('900E', 'GSM', 0.2)
+   # [
+   # {"DARFCN": 6165, "UARFCN": 24165, "Ddbm": 23.0, "Udbm": 15.0}, 
+   # {"DARFCN": 6195, "UARFCN": 24195, "Ddbm": 23.0, "Udbm": 15.0} 
+   # ],
+   # [
+   # {"DARFCN": 6305, "UARFCN": 24305, "Ddbm": 30.0, "Udbm": 20.0},
+   # {"DARFCN": 6365, "UARFCN": 24365, "Ddbm": 30.0, "Udbm": 20.0} 
+   # ]
+    ]            
+    }
+    ]
+    }
+        
+    ]
+    
 
+}
 
 
 
@@ -134,6 +186,39 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
+#class UploadFileForm(forms.Form):
+#    title = forms.CharField(max_length=50)
+#    file = forms.FileField()
+
+def home(request):
+    documents = Document.objects.all()
+    return render(request, 'home.html', { 'documents': documents })
+
+@csrf_exempt #https://stackoverflow.com/questions/16458166/how-to-disable-djangos-csrf-validation
+def simple_upload(request):
+    #if request.method == 'POST' and request.FILES['myfile']:
+    if request.method == 'POST' and 'myfile' in request.FILES: #try this version?
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'simple_upload.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
+    return render(request, 'simple_upload.html')
+'''
+def model_form_upload(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = DocumentForm()
+    return render(request, 'model_form_upload.html', {
+        'form': form
+    })
+ '''
 
 class InitViewSet(APIView):
     
@@ -155,6 +240,10 @@ class InitViewSet(APIView):
         print('Received SPEC_REQ')
         #return spec_resp
         return pawscFunction.avail_spec_resp(self, params)
+    
+    def Method_scan_data_notify(self, params):
+        print('Received SCAN_DATA_NOTIFY')
+        return 0 #pawscFunction.upload_file(self, params)
 
     def Unknown_Req(self,params):
         print('Received Unknown Method: ', params)
@@ -200,7 +289,12 @@ class InitViewSet(APIView):
                 elif (PAWSCMethod == constants.MethodNameRegister):
                     Result = self.Method_Device_Reg(PAWSCParams)
                     RD.MethodSet(constants.MethodNameRegister)
-                    RD.ParamSet(Result)                             
+                    RD.ParamSet(Result) 
+                
+                elif (PAWSCMethod == constants.MethodNameNotify):
+                    Result = self.Method_scan_data_notify(PAWSCParams)
+                    RD.MethodSet(constants.MethodNameNotify)
+                    RD.ParamSet(Result)
 
                 # Case for method not known
                 else:
