@@ -27,7 +27,7 @@ SECRET_KEY = '^d9c5kv(!iupcjw(#x6an=br7nk!4adu#i170&7%y$rs*xqz!^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'vpn.inethi.net','ec2-3-214-99-37.compute-1.amazonaws.com','pawsc.info', 'test1.pawsc.info', 'test2.pawsc.info' ]
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.8.100', 'localhost', 'vpn.inethi.net','ec2-3-214-99-37.compute-1.amazonaws.com','pawsc.info', 'test1.pawsc.info', 'test2.pawsc.info' ]
 
 #MEDIA URL
 MEDIA_URL = '/uploaded_spec_scans/'
