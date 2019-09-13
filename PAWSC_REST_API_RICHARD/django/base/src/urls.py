@@ -22,9 +22,10 @@ router.register(r'groups', views.GroupViewSet)
 urlpatterns = [
     path(r'pawsc', InitViewSet.as_view()),
     path(r'pawsc/upload', views.simple_upload, name='simple_upload'),
-     path(r'pawsc/home', views.home, name='home')
+    path(r'pawsc/reports', views.spectrum_analysis_report, name='spectrum_measurement_reports'),
+    path(r'pawsc/home', views.home, name='home')
      # path(r'pawsc/home', views.model_form_upload, name='model_form_upload')
   
-]   
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)   
  
 urlpatterns += router.urls

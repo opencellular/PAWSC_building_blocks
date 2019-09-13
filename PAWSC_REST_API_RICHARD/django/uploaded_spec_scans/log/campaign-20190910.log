@@ -1,0 +1,177 @@
+2019/09/10:11:40:56 --------------------------- [./campaign.sh]
+2019/09/10:11:40:56 No new database found.
+2019/09/10:11:52:34 --------------------------- [./campaign.sh]
+2019/09/10:11:52:34 actual path = [/root/scripts]
+2019/09/10:11:52:34 Exists a database with name 
+2019/09/10:11:52:34 Processing file
+2019/09/10:11:52:34 /root/scripts/graph.sh
+2019/09/10:11:52:34 Destination: []
+2019/09/10:11:52:34 Copying dir with html report to destination
+2019/09/10:11:52:34 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:11:52:34 end of work: [.db]
+2019/09/10:12:36:42 --------------------------- [./campaign.sh]
+2019/09/10:12:36:42 actual path = [/root/scripts]
+2019/09/10:12:36:42 Exists a database with name 
+2019/09/10:12:36:42 Processing file
+2019/09/10:12:36:42 /root/scripts/graph.sh
+2019/09/10:12:36:42 Destination: []
+2019/09/10:12:36:42 Copying dir with html report to destination
+2019/09/10:12:36:42 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:12:36:42 end of work: [.db]
+2019/09/10:13:07:04 --------------------------- [./campaign.sh]
+2019/09/10:13:07:04 actual path = [/root/scripts]
+2019/09/10:13:07:04 Exists a database with name 
+2019/09/10:13:07:04 Processing file
+2019/09/10:13:07:04 /root/scripts/graph.sh
+2019/09/10:13:07:04 Destination: []
+2019/09/10:13:07:04 Copying dir with html report to destination
+2019/09/10:13:07:04 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:13:07:04 end of work: [.db]
+2019/09/10:13:08:02 --------------------------- [./campaign.sh]
+2019/09/10:13:08:02 actual path = []
+2019/09/10:13:10:00 --------------------------- [./campaign.sh]
+2019/09/10:13:10:01 actual path = []
+2019/09/10:13:15:55 --------------------------- [./campaign.sh]
+2019/09/10:13:15:55 actual path = []
+2019/09/10:13:29:49 --------------------------- [./campaign.sh]
+2019/09/10:13:29:49 No new database found.
+2019/09/10:13:32:22 --------------------------- [./campaign.sh]
+2019/09/10:13:32:22 actual path = []
+2019/09/10:14:01:50 --------------------------- [./campaign.sh]
+2019/09/10:14:01:50 actual path = []
+2019/09/10:14:01:50 Exists a database with name ict4d_lab.db
+2019/09/10:14:01:50 Processing file
+2019/09/10:14:01:50 /root/scripts/graph.sh
+2019/09/10:14:01:50 Destination: [ict4d_lab]
+2019/09/10:14:01:50 Copying dir with html report to destination
+2019/09/10:14:01:50 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:14:28:01 --------------------------- [./campaign.sh]
+2019/09/10:14:28:01 actual path = []
+2019/09/10:14:28:01 Exists a database with name ict4d_lab.db
+2019/09/10:14:28:01 Processing file
+2019/09/10:14:28:01 /root/scripts/graph.sh
+2019/09/10:14:28:01 Destination: [ict4d_lab]
+2019/09/10:14:28:01 Copying dir with html report to destination
+2019/09/10:14:28:01 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:14:30:46 --------------------------- [./campaign.sh]
+2019/09/10:14:30:46 actual path = []
+2019/09/10:14:30:46 Exists a database with name ict4d_lab.db
+2019/09/10:14:30:46 Processing file
+2019/09/10:14:30:46 /root/scripts/graph.sh
+2019/09/10:14:30:46 Destination: [ict4d_lab]
+2019/09/10:14:30:46 Copying dir with html report to destination
+2019/09/10:14:30:46 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:14:57:36 --------------------------- [./campaign.sh]
+2019/09/10:14:57:36 actual path = []
+2019/09/10:14:57:36 Exists a database with name ict4d_lab.db
+2019/09/10:14:57:36 Processing file
+2019/09/10:14:57:37 /root/scripts/graph.sh
+2019/09/10:14:57:37 Destination: [ict4d_lab]
+2019/09/10:14:57:37 Copying dir with html report to destination
+2019/09/10:14:57:37 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:14:58:22 --------------------------- [./campaign.sh]
+2019/09/10:14:58:22 actual path = []
+2019/09/10:14:58:22 Exists a database with name ict4d_lab.db
+2019/09/10:14:58:22 Processing file
+2019/09/10:14:58:22 /root/scripts/graph.sh
+2019/09/10:14:58:22 Destination: [ict4d_lab]
+2019/09/10:14:58:22 Copying dir with html report to destination
+2019/09/10:14:58:22 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:15:01:48 --------------------------- [./campaign.sh]
+2019/09/10:15:01:48 actual path = []
+2019/09/10:15:01:48 Exists a database with name ict4d_lab.db
+2019/09/10:15:01:48 Processing file
+2019/09/10:15:01:48 /root/scripts/graph.sh
+2019/09/10:15:01:48 Destination: [ict4d_lab]
+2019/09/10:15:01:48 Copying dir with html report to destination
+2019/09/10:15:01:48 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:15:02:01 --------------------------- [./campaign.sh]
+2019/09/10:15:02:01 actual path = []
+2019/09/10:15:02:01 Exists a database with name ict4d_lab.db
+2019/09/10:15:02:01 Processing file
+2019/09/10:15:02:01 /root/scripts/graph.sh
+2019/09/10:15:02:01 Destination: [ict4d_lab]
+2019/09/10:15:02:01 Copying dir with html report to destination
+2019/09/10:15:02:01 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:15:02:16 --------------------------- [./campaign.sh]
+2019/09/10:15:02:16 actual path = []
+2019/09/10:15:02:16 Exists a database with name ict4d_lab.db
+2019/09/10:15:02:16 Processing file
+2019/09/10:15:02:16 /root/scripts/graph.sh
+2019/09/10:15:02:16 Destination: [ict4d_lab]
+2019/09/10:15:02:16 Copying dir with html report to destination
+2019/09/10:15:02:16 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:15:04:21 --------------------------- [./campaign.sh]
+2019/09/10:15:04:21 actual path = []
+2019/09/10:15:04:21 Exists a database with name ict4d_lab.db
+2019/09/10:15:04:21 Processing file
+2019/09/10:15:04:21 --->>> Start [./dbgraph.sh ict4d_lab.db ../../../PAWSC_REST_API_RICHARD/django/uploaded_spec_scans/log/campaign-20190910.log]
+2019/09/10:15:04:21 Error: database ict4d_lab.db not found!
+2019/09/10:15:04:21 /root/scripts/graph.sh
+2019/09/10:15:04:21 Destination: [ict4d_lab]
+2019/09/10:15:04:21 Copying dir with html report to destination
+2019/09/10:15:04:21 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:15:14:26 --------------------------- [./campaign.sh]
+2019/09/10:15:14:26 actual path = []
+2019/09/10:15:14:26 Exists a database with name ict4d_lab.db
+2019/09/10:15:14:26 Processing file
+2019/09/10:15:14:26 --->>> Start [./dbgraph.sh ict4d_lab.db ../../../PAWSC_REST_API_RICHARD/django/uploaded_spec_scans/log/campaign-20190910.log]
+2019/09/10:15:14:26 Error: database ict4d_lab.db not found!
+2019/09/10:15:14:27 /root/scripts/graph.sh
+2019/09/10:15:14:27 Destination: [ict4d_lab]
+2019/09/10:15:14:27 Copying dir with html report to destination
+2019/09/10:15:14:27 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:15:15:09 --------------------------- [./campaign.sh]
+2019/09/10:15:15:09 actual path = []
+2019/09/10:15:15:09 Exists a database with name ict4d_lab.db
+2019/09/10:15:15:09 Processing file
+2019/09/10:15:15:09 --->>> Start [./dbgraph.sh ict4d_lab.db ../../../PAWSC_REST_API_RICHARD/django/uploaded_spec_scans/log/campaign-20190910.log]
+2019/09/10:15:15:09 Error: database ict4d_lab.db not found!
+2019/09/10:15:15:10 /root/scripts/graph.sh
+2019/09/10:15:15:12 Destination: [ict4d_lab]
+2019/09/10:15:15:12 Copying dir with html report to destination
+2019/09/10:15:15:12 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:15:44:49 --------------------------- [./campaign.sh]
+2019/09/10:15:44:49 actual path = []
+2019/09/10:15:44:49 Exists a database with name ict4d_lab.db
+2019/09/10:15:44:49 Processing file
+2019/09/10:15:44:49 --->>> Start [./dbgraph.sh ict4d_lab.db ../../../PAWSC_REST_API_RICHARD/django/uploaded_spec_scans/log/campaign-20190910.log]
+2019/09/10:15:44:49 Error: database ict4d_lab.db not found!
+2019/09/10:15:44:51 /root/scripts/graph.sh
+2019/09/10:15:44:51 Destination: [ict4d_lab]
+2019/09/10:15:44:51 Copying dir with html report to destination
+2019/09/10:15:44:52 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:15:58:34 --------------------------- [./campaign.sh]
+2019/09/10:15:58:34 No new database found.
+2019/09/10:15:59:38 --------------------------- [./campaign.sh]
+2019/09/10:15:59:38 No new database found.
+2019/09/10:16:02:32 --------------------------- [./campaign.sh]
+2019/09/10:16:02:32 No new database found.
+2019/09/10:16:08:00 --------------------------- [./campaign.sh]
+2019/09/10:16:08:00 actual path = []
+2019/09/10:16:08:00 Exists a database with name measures.db
+2019/09/10:16:08:00 Processing file
+2019/09/10:16:08:00 --->>> Start [./dbgraph.sh measures.db ../../../PAWSC_REST_API_RICHARD/django/uploaded_spec_scans/log/campaign-20190910.log]
+2019/09/10:16:08:00 Error: database measures.db not found!
+2019/09/10:16:08:01 /root/scripts/graph.sh
+2019/09/10:16:08:01 Destination: [measures]
+2019/09/10:16:08:01 Copying dir with html report to destination
+2019/09/10:16:08:01 --->>> Start [./cpydest.sh /maps/measures / ../../../PAWSC_REST_API_RICHARD/django/uploaded_spec_scans/log/campaign-20190910.log]
+2019/09/10:16:08:01 /maps/measures is not a valid item to copy
+2019/09/10:16:08:01 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts
+2019/09/10:16:38:19 --------------------------- [./campaign.sh]
+2019/09/10:16:38:19 No new database found.
+2019/09/10:16:38:22 --------------------------- [./campaign.sh]
+2019/09/10:16:38:22 No new database found.
+2019/09/10:16:46:34 --------------------------- [./campaign.sh]
+2019/09/10:16:46:34 actual path = []
+2019/09/10:16:46:34 Exists a database with name measures.db
+2019/09/10:16:46:34 Processing file
+2019/09/10:16:46:34 --->>> Start [./dbgraph.sh measures.db ../../../PAWSC_REST_API_RICHARD/django/uploaded_spec_scans/log/campaign-20190910.log]
+2019/09/10:16:46:34 Error: database measures.db not found!
+2019/09/10:16:46:35 /root/scripts/graph.sh
+2019/09/10:16:46:35 Destination: [measures]
+2019/09/10:16:46:35 Copying dir with html report to destination
+2019/09/10:16:46:35 --->>> Start [./cpydest.sh /maps/measures / ../../../PAWSC_REST_API_RICHARD/django/uploaded_spec_scans/log/campaign-20190910.log]
+2019/09/10:16:46:35 /maps/measures is not a valid item to copy
+2019/09/10:16:46:35 osm: /home/richard/workspace/django_pawsc/PAWSC_building_blocks/RFTrack_stuff/rftrack-server-scripts/scripts

@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['127.0.0.1', '192.168.8.100', 'localhost', 'vpn.inethi.net','ec
 MEDIA_URL = '/uploaded_spec_scans/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploaded_spec_scans')
 
+
 # Application definition
 
 INSTALLED_APPS = [

@@ -220,7 +220,21 @@ def model_form_upload(request):
     })
  '''
 
+def spectrum_analysis_report(request):
+    #if request.method == 'POST' and request.FILES['myfile']:
+    if request.method == 'POST' and 'myfile' in request.FILES: #try this version?
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'spectrum_measurement_reports.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
+    return render(request, 'spectrum_measurement_reports.html')
+
+
 class InitViewSet(APIView):
+
     
     def Method_Device_Reg(self, params):        
         print('Received REGISTRATION_REQ')         
