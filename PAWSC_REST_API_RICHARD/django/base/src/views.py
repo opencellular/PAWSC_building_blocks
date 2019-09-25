@@ -15,6 +15,15 @@ from base.src.PAWSCManager import pawscFunction
 import datetime
 from datetime import timedelta
 
+#file upload stuff
+from django import forms
+from django.shortcuts import render, redirect
+from django.core.files.storage import FileSystemStorage
+from django.views.decorators.csrf import csrf_exempt
+#from base.src.models import Document
+#from base.src.forms import DocumentForm
+
+
 """
 TODO
 1) extract 'band', 'tech' and 'bw' from AVAILABLE_SPECTRUM_REQ and use in function call pawscFunction.get_spectrum('900E', 'GSM', 0.2)
@@ -177,8 +186,55 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
+#class UploadFileForm(forms.Form):
+#    title = forms.CharField(max_length=50)
+#    file = forms.FileField()
+
+def home(request):
+    documents = Document.objects.all()
+    return render(request, 'home.html', { 'documents': documents })
+
+@csrf_exempt #https://stackoverflow.com/questions/16458166/how-to-disable-djangos-csrf-validation
+def simple_upload(request):
+    #if request.method == 'POST' and request.FILES['myfile']:
+    if request.method == 'POST' and 'myfile' in request.FILES: #try this version?
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'simple_upload.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
+    return render(request, 'simple_upload.html')
+'''
+def model_form_upload(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = DocumentForm()
+    return render(request, 'model_form_upload.html', {
+        'form': form
+    })
+ '''
+
+def spectrum_analysis_report(request):
+    #if request.method == 'POST' and request.FILES['myfile']:
+    if request.method == 'POST' and 'myfile' in request.FILES: #try this version?
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'spectrum_measurement_reports.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
+    return render(request, 'spectrum_measurement_reports.html')
+
 
 class InitViewSet(APIView):
+
     
     def Method_Device_Reg(self, params):        
         print('Received REGISTRATION_REQ')         
@@ -196,7 +252,12 @@ class InitViewSet(APIView):
 
     def Method_Spec_Req(self,params):
         print('Received SPEC_REQ')
-        return spec_resp
+        #return spec_resp
+        return pawscFunction.avail_spec_resp(self, params)
+    
+    def Method_scan_data_notify(self, params):
+        print('Received SCAN_DATA_NOTIFY')
+        return 0 #pawscFunction.upload_file(self, params)
 
     def Unknown_Req(self,params):
         print('Received Unknown Method: ', params)
@@ -242,7 +303,12 @@ class InitViewSet(APIView):
                 elif (PAWSCMethod == constants.MethodNameRegister):
                     Result = self.Method_Device_Reg(PAWSCParams)
                     RD.MethodSet(constants.MethodNameRegister)
-                    RD.ParamSet(Result)                             
+                    RD.ParamSet(Result) 
+                
+                elif (PAWSCMethod == constants.MethodNameNotify):
+                    Result = self.Method_scan_data_notify(PAWSCParams)
+                    RD.MethodSet(constants.MethodNameNotify)
+                    RD.ParamSet(Result)
 
                 # Case for method not known
                 else:

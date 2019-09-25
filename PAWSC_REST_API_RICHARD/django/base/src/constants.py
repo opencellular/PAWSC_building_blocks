@@ -20,8 +20,10 @@ TypeAvailableSpectrumResponse = "AVAIL_SPECTRUM_RESP"
 TypeBatchAvailableSpectrumRequest = "AVAIL_SPECTRUM_BATCH_REQ"
 TypeBatchAvailableSpectrumResponse = "AVAIL_SPECTRUM_BATCH_RESP"
 
-TypeNotifySpectrumUsageRequest = "SPECTRUM_USE_NOTIFY"
-TypeNotifySpectrumUsageResponse = "SPECTRUM_USE_RESP"
+#TypeNotifySpectrumUsageRequest = "SPECTRUM_USE_NOTIFY"
+#TypeNotifySpectrumUsageResponse = "SPECTRUM_USE_RESP"
+TypeNotifySpectrumUsageRequest = "SCAN_DAT_NOTIFY"
+TypeNotifySpectrumUsageResponse = "SCAN_DATA_RESP"
 
 TypeDeviceValidationRequest = "DEV_VALID_REQ"
 TypeDeviceValidationResponse = "DEV_VALID_RESP"

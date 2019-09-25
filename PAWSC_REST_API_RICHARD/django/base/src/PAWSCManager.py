@@ -5,6 +5,12 @@ import json
 from base.src.models import * #UnassignedFreq
 from base.src.arfcn import FreqRangeToArfcnRange
 import datetime
+from datetime import timedelta
+#useful libs for the upload stuff
+#from django.http import HttpResponseRedirect
+
+
+
 
 LTE_arfcn_table = {
     'Band1':{'FDL_low':2110, 'NOffs-DL':0, 'FUL_low': 1920, 'NOffs-UL':18000, 'spacing': 190},
@@ -204,11 +210,12 @@ class pawscFunction:
             init_resp = {
                             "type": "INIT_RESP",
                             "rulesetInfo": {
-                                "authority": "???",
-                                "rulesetId": "???",
+                                "authority": "MZ",
+                                "rulesetId": ["ICASATVWS-2018", "FccTvBandWhiteSpace-2010", "ETSI-EN-301-598-1.1.1"],
                                 "maxLocationChange": 0.00,
-                                "maxPollingSec": 0
-                               }
+                                "maxPollingSecs": 0
+                               },
+                            "dataBaseChange":{"dbUpdateSpec":{"databases":[{"databaseSpec":{"name":"OpenCellular","uri":"http://pawsc.info:8001/api/pawsc"}}]}}
                         }  
             '''
             mark device as initialised if not initialised already
@@ -226,7 +233,7 @@ class pawscFunction:
         else: #if device is not registered with authority
             init_resp = {
                 "type": "INIT_RESP",
-                "rulesetInfo": "<device is not registered type of error message>"            
+                "Error":{"code": "302", "message":"Device not registered"}            
             } 
             
         return init_resp
@@ -260,6 +267,67 @@ class pawscFunction:
         In future validate all other necessary conditions required for registration 
         """
         return registration_resp
+    
+    def avail_spec_resp(self, params):
+        
+        start_time = datetime.datetime.now().isoformat()
+        
+        if InitialisedDevices.objects.filter(serial_number = params['deviceDesc']['serialNumber']).exists():
+            spec_resp = {
+                "type": "AVAIL_SPECTRUM_RESP",
+                "spectrumSchedules": [
+                {
+                "eventTime": {
+                "startTime": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z', 
+                "stopTime":  (datetime.datetime.utcnow().replace(microsecond=0) + timedelta(hours=12, days = 0)).isoformat() + 'Z' 
+                },
+                "technology": "GSM",
+                "band": "900E",
+                "duplex": "FDD",
+                
+                "spectra": [
+                {
+                    "resolutionBwHz": 0.2e6, #3e6,
+                #"profilesHz": [ pawscFunction.get_spectrum('Band20', 'LTE', 0.2)
+                "profilesHz": [ pawscFunction.get_spectrum_hz('900E', 'GSM', 0.2)
+                #[
+                #{"Dhz": 7.910e8, "UHz":8.320e8, "Ddbm": 23.0, "Udbm": 15.0}, 
+                #{"Dhz": 7.970e8, "UHz":8.380e8, "Ddbm": 23.0, "Udbm": 15.0}
+                #],
+                #[
+                #{"Dhz": 8.050e8, "UHz":8.460e8, "Ddbm": 30.0, "Udbm": 20.0},
+                #{"Dhz": 8.140e8, "UHz":8.550e8, "Ddbm": 30.0, "Udbm": 20.0}
+                #]
+                ],
+                "profilesN": [ pawscFunction.get_spectrum('900E', 'GSM', 0.2)
+               # [
+               # {"DARFCN": 6165, "UARFCN": 24165, "Ddbm": 23.0, "Udbm": 15.0}, 
+               # {"DARFCN": 6195, "UARFCN": 24195, "Ddbm": 23.0, "Udbm": 15.0} 
+               # ],
+               # [
+               # {"DARFCN": 6305, "UARFCN": 24305, "Ddbm": 30.0, "Udbm": 20.0},
+               # {"DARFCN": 6365, "UARFCN": 24365, "Ddbm": 30.0, "Udbm": 20.0} 
+               # ]
+                ]            
+                }
+                ]
+                }
+                    
+                ]
+                
+            
+            }
+        else:
+            spec_resp = {
+                 "type": "AVAIL_SPECTRUM_RESP",
+                 "Error":{"code": "300", "message":"Device not initialised"}
+            }
+        
+        return spec_resp
+    
+
+                
+    
     
     def __init__(self):
         """Constructor"""

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +27,11 @@ SECRET_KEY = '^d9c5kv(!iupcjw(#x6an=br7nk!4adu#i170&7%y$rs*xqz!^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'vpn.inethi.net','ec2-3-214-99-37.compute-1.amazonaws.com','pawsc.info', 'test1.pawsc.info', 'test2.pawsc.info' ]
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.8.100', 'localhost', 'vpn.inethi.net','ec2-3-214-99-37.compute-1.amazonaws.com','pawsc.info', 'test1.pawsc.info', 'test2.pawsc.info' ]
+
+#MEDIA URL
+MEDIA_URL = '/uploaded_spec_scans/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploaded_spec_scans')
 
 
 # Application definition
@@ -56,7 +62,7 @@ ROOT_URLCONF = 'base.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'base/src/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
