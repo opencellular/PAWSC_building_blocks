@@ -81,6 +81,7 @@ def  AvailSpecReq(params):
 
 						resPawsC['location'] = location
 						resPawsC['spectrumSchedule'] = spectrumSchedule
+						resPawsC['CSIRGLSD'] = resGLSD
 						
 						return resPawsC
 			
