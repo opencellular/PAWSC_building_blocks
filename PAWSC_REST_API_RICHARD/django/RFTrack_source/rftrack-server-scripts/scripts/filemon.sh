@@ -96,7 +96,8 @@ chkdirdb() {
 				
 				#echo "temp = "$temp
 				#echo "line = "$line
-				./querydb.sh $line |  sed 's/|/ /g' > tmp/spec_map.txt
+				#./querydb.sh $line |  sed 's/|/ /g' > tmp/spec_map.txt #needed if querydb.sh not sending output to file
+				./querydb.sh $line #output sent to spec_map.txt from within querydb.sh
 				temp=$line
 			fi
 
