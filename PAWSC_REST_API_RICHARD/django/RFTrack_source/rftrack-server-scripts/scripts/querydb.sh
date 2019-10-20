@@ -97,4 +97,4 @@ done
 
 #assuming everything went ok:
 #clean up all tmp files
-#rm -r tmp/*
+rm -r tmp/*
