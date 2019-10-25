@@ -22,6 +22,10 @@ count=$(sqlite3 $DIRDB/$dbname  "SELECT MAX(id) FROM dbmdata";)
 startTime=$(sqlite3 $DIRDB/$dbname  "SELECT MIN(created_at) FROM dbmdata";) 
 endTime=$(sqlite3 $DIRDB/$dbname  "SELECT MAX(created_at) FROM dbmdata";)
 
+if [ ! -d tmp ]
+  then mkdir tmp
+fi
+
 echo $startTime > tmp/start_time.txt
 echo $endTime > tmp/end_time.txt
 echo $dbname > tmp/dbfilename.txt #not sure if this is needed??
