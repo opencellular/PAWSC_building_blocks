@@ -95,6 +95,7 @@ done
 
 ./update-index.sh $dbname
 
-#assuming everything went ok:
-#clean up all tmp files
+#assuming everything went ok: clean up all tmp files
+
 rm -r tmp/*
+exit

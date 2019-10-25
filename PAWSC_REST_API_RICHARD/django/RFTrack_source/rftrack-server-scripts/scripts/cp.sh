@@ -48,6 +48,8 @@ echo $country
 echo $countryCode
 echo $placeOfMeasurements
 
+flag=$(echo "$countryCode" | awk '{print tolower($0)}') #change country code to lower case
+
 #sed -Ei "0,/(<insertionPoint>)/s//<textToInsert>/"  index.html #replaces the text at the insertion point
 sed -Ei "0,/(<campaignDate>)/s//$campaignDate/"  index.html
 sed -Ei "0,/(<campaignDuration>)/s//$campaignDuration/"  index.html
@@ -81,6 +83,9 @@ xvfb-run wkhtmltopdf $newCampaignDir/index.html $newCampaignDir/filedown/report.
 #cp tmp/report.pdf $newCampaignDir/filedown/report.pdf
 
 cp $dbDownloadDir/ico -r $newCampaignDir
+
+#cp flag
+cp flags-normal/$flag.png $newCampaignDir/images/flagcountry.png
 
 
 
