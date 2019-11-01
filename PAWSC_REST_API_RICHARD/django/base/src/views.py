@@ -255,9 +255,9 @@ class InitViewSet(APIView):
         #return spec_resp
         return pawscFunction.avail_spec_resp(self, params)
     
-    def Method_scan_data_notify(self, params):
+    def Method_scan_data_notify(self, params, data):
         print('Received SCAN_DATA_NOTIFY')
-        return 0 #pawscFunction.upload_file(self, params)
+        return pawscFunction.scan_data_resp(self, params, data)
 
     def Unknown_Req(self,params):
         print('Received Unknown Method: ', params)
@@ -285,6 +285,7 @@ class InitViewSet(APIView):
             if (('method' in PostString) and ('params' in PostString)):
                 PAWSCMethod = PostString['method']
                 PAWSCParams = PostString['params']
+                scanData = PostString['data'] #spectrum scan data (i.e. freq power pairs) being pushed to the server
                 print('Received: ', PAWSCMethod, PAWSCParams)
 
                 if (PAWSCMethod == constants.MethodNameInit):
@@ -306,7 +307,7 @@ class InitViewSet(APIView):
                     RD.ParamSet(Result) 
                 
                 elif (PAWSCMethod == constants.MethodNameNotify):
-                    Result = self.Method_scan_data_notify(PAWSCParams)
+                    Result = self.Method_scan_data_notify(PAWSCParams, scanData)
                     RD.MethodSet(constants.MethodNameNotify)
                     RD.ParamSet(Result)
 

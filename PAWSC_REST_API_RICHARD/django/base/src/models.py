@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 ''' 
@@ -64,3 +65,63 @@ class Document(models.Model):
     description = models.CharField(max_length=255, blank=True)
     document = models.FileField(upload_to='documents/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+class Notifyspectrumusedbmdata(models.Model):
+    created_at = models.DateTimeField(blank=True, null=True)
+    location_id = models.IntegerField(blank=True, null=True)
+    config_id = models.IntegerField(blank=True, null=True)
+    min = models.IntegerField(blank=True, null=True)
+    max = models.IntegerField(blank=True, null=True)
+    med = models.IntegerField(blank=True, null=True)
+    nsteps = models.IntegerField(blank=True, null=True)
+    v000 = models.IntegerField(blank=True, null=True)
+    v001 = models.IntegerField(blank=True, null=True)
+    v002 = models.IntegerField(blank=True, null=True)
+    v003 = models.IntegerField(blank=True, null=True)
+    v004 = models.IntegerField(blank=True, null=True)
+    v005 = models.IntegerField(blank=True, null=True)
+    v006 = models.IntegerField(blank=True, null=True)
+              
+    class Meta:
+        managed = False
+        db_table = 'notifySpectrumUsedBmData' 
+#<insert v007 ... v00n>
+#https://stackoverflow.com/questions/24725724/django-creating-model-fields-from-list-with-for-loop
+
+    pass
+pref_dbm="v"
+for i in range(7, 21):
+    column=str(i).zfill(3) #increment in pattern 001, 002, ..., **n
+    field = pref_dbm+column #dynamically define field name i.e. v000, v001, v002, ..., v**n    
+    Notifyspectrumusedbmdata.add_to_class(field, models.IntegerField(blank=True, null=True))
+    #notifySpectrumUsedBmData.add_to_class(field, models.IntegerField(blank=True, null=True))
+          
+
+class Notifyspectrumuseconfig(models.Model):
+    created_at = models.DateTimeField(blank=True, null=True)
+    campaign_id = models.IntegerField(blank=True, null=True)
+    start_freq = models.IntegerField(blank=True, null=True)
+    end_freq = models.IntegerField(blank=True, null=True)
+    amp_top = models.IntegerField(blank=True, null=True)
+    amp_bottom = models.IntegerField(blank=True, null=True)
+    nsteps = models.IntegerField(blank=True, null=True)
+    f000 = models.FloatField(blank=True, null=True)
+    f001 = models.FloatField(blank=True, null=True)
+    f002 = models.FloatField(blank=True, null=True)
+    f003 = models.FloatField(blank=True, null=True)
+    f004 = models.FloatField(blank=True, null=True)
+    f005 = models.FloatField(blank=True, null=True)
+    f006 = models.FloatField(blank=True, null=True)
+             
+    class Meta:
+        managed = False
+        db_table = 'notifySpectrumUseConfig'
+
+ #<insert f007 ... v**n>
+    pass
+pref_dbm="f"
+for i in range(7, 21):
+    column=str(i).zfill(3) #increment in pattern 001, 002, ..., **n
+    field = pref_dbm+column #dynamically define field name i.e. v000, v001, v002, ..., v**n    
+    Notifyspectrumuseconfig.add_to_class(field, models.FloatField(blank=True, null=True))
+  

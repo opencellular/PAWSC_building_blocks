@@ -8,6 +8,7 @@ import datetime
 from datetime import timedelta
 #useful libs for the upload stuff
 #from django.http import HttpResponseRedirect
+from django.db import transaction
 
 
 
@@ -324,9 +325,57 @@ class pawscFunction:
             }
         
         return spec_resp
-    
-
+   
+ 
+    @transaction.atomic #commit once, instead at each save()
+    def scan_data_resp(self, params, data):
+        #pair1=data['3.3']
+        #print('pair1: ', pair1)
+        count=0
+        if( len(Notifyspectrumusedbmdata.objects.all()) == 0):
+            next_rec_dbm=1
+        else:
+            next_rec_dbm=Notifyspectrumusedbmdata.objects.last().id + 1
+        if(len(Notifyspectrumuseconfig.objects.all()) == 0):
+            next_rec_config=1
+        else:
+            next_rec_config=Notifyspectrumuseconfig.objects.last().id + 1
+       
+        Notifyspectrumusedbmdata(id=next_rec_dbm).save() #enter new empty record
+        Notifyspectrumuseconfig(id=next_rec_config).save()
+        #data = json.dumps(data, sort_keys=True)
+        for item in data:           
+           # print(item, data_sorted[item])
+            column=str(count).zfill(3)
+            pref_dbm="v"
+            pref_config="f"
+            field_dbm = pref_dbm+column #dynamically define field name i.e. v000, v001, v002, ..., v**n
+            field_config=pref_config+column #dynamically define field name i.e. f000, f001, f002, ..., f**n
+            #dataset.append(field_dbm +'='+ data[item])       
+            #Notifyspectrumusedbmdata(**{field: data[item]})
+            Notifyspectrumusedbmdata.objects.filter(id=next_rec_dbm).update(**{field_dbm: data[item]}) #populate the record
+            Notifyspectrumuseconfig.objects.filter(id=next_rec_config).update(**{field_config: item})
+            count += 1
+        #Notifyspectrumusedbmdata(v000=12, v001=2, v002=4, v003=10, v004=6, v005=8).save()
+        #print(dataset)
+        #print(str(dataset).strip("[''], ''"))
+        #print (','.join(dataset))
+        #print (json.dumps(data, sort_keys=True))
+        #print (data_sorted)
+        #print (data)
+        #transaction.commit()
+        
+        #Assume data successfully uploaded:
+        scan_data_resp = {
+             "type": "SCAN_DATA_RESP",
+             "Ack":{"code": "000", "message":"Spectrum scan data successfully uploaded"}
+        }        
+       
+            
+            
                 
+       
+        return scan_data_resp
     
     
     def __init__(self):

@@ -22,7 +22,7 @@ TypeBatchAvailableSpectrumResponse = "AVAIL_SPECTRUM_BATCH_RESP"
 
 #TypeNotifySpectrumUsageRequest = "SPECTRUM_USE_NOTIFY"
 #TypeNotifySpectrumUsageResponse = "SPECTRUM_USE_RESP"
-TypeNotifySpectrumUsageRequest = "SCAN_DAT_NOTIFY"
+TypeNotifySpectrumUsageRequest = "SCAN_DATA_NOTIFY"
 TypeNotifySpectrumUsageResponse = "SCAN_DATA_RESP"
 
 TypeDeviceValidationRequest = "DEV_VALID_REQ"
