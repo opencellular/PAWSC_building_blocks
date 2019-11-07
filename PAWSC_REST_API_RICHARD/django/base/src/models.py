@@ -78,19 +78,16 @@ class Notifyspectrumusedbmdata(models.Model):
     v001 = models.IntegerField(blank=True, null=True)
     v002 = models.IntegerField(blank=True, null=True)
     v003 = models.IntegerField(blank=True, null=True)
-    v004 = models.IntegerField(blank=True, null=True)
-    v005 = models.IntegerField(blank=True, null=True)
-    v006 = models.IntegerField(blank=True, null=True)
-              
+                  
     class Meta:
         managed = False
         db_table = 'notifySpectrumUsedBmData' 
-#<insert v007 ... v00n>
+#<insert v004 ... v127>
 #https://stackoverflow.com/questions/24725724/django-creating-model-fields-from-list-with-for-loop
 
     pass
 pref_dbm="v"
-for i in range(7, 21):
+for i in range(4, 128): # range(i, n) implies from i to n-1
     column=str(i).zfill(3) #increment in pattern 001, 002, ..., **n
     field = pref_dbm+column #dynamically define field name i.e. v000, v001, v002, ..., v**n    
     Notifyspectrumusedbmdata.add_to_class(field, models.IntegerField(blank=True, null=True))
@@ -109,18 +106,15 @@ class Notifyspectrumuseconfig(models.Model):
     f001 = models.FloatField(blank=True, null=True)
     f002 = models.FloatField(blank=True, null=True)
     f003 = models.FloatField(blank=True, null=True)
-    f004 = models.FloatField(blank=True, null=True)
-    f005 = models.FloatField(blank=True, null=True)
-    f006 = models.FloatField(blank=True, null=True)
-             
+                 
     class Meta:
         managed = False
         db_table = 'notifySpectrumUseConfig'
 
- #<insert f007 ... v**n>
+ #<insert f004 ... f127>
     pass
 pref_dbm="f"
-for i in range(7, 21):
+for i in range(4, 128):
     column=str(i).zfill(3) #increment in pattern 001, 002, ..., **n
     field = pref_dbm+column #dynamically define field name i.e. v000, v001, v002, ..., v**n    
     Notifyspectrumuseconfig.add_to_class(field, models.FloatField(blank=True, null=True))

@@ -325,10 +325,9 @@ class pawscFunction:
             }
         
         return spec_resp
-   
- 
+    
     @transaction.atomic #commit once, instead at each save()
-    def scan_data_resp(self, params, data):
+    def scan_data_resp(self, params):
         #pair1=data['3.3']
         #print('pair1: ', pair1)
         count=0
@@ -341,10 +340,26 @@ class pawscFunction:
         else:
             next_rec_config=Notifyspectrumuseconfig.objects.last().id + 1
        
-        Notifyspectrumusedbmdata(id=next_rec_dbm).save() #enter new empty record
-        Notifyspectrumuseconfig(id=next_rec_config).save()
+        Notifyspectrumusedbmdata(id=next_rec_dbm,
+                                 created_at = params['info']['time'],
+                                 config_id = next_rec_config,
+                                 min = params['info']['min'],
+                                 max = params['info']['max'],
+                                 med = params['info']['med'],                               
+                                 nsteps =  params['info']['nsteps'],
+                                 ).save() #enter new empty record
+        
+        Notifyspectrumuseconfig(id=next_rec_config, 
+                                created_at=params['config']['created_at'], #date and time scan started
+                                campaign_id=params['config']['campaign_id'],
+                                start_freq=params['config']['start_freq'],
+                                end_freq=params['config']['end_freq'],
+                                amp_top=params['config']['amp_top'],
+                                amp_bottom=params['config']['amp_bottom'],
+                                nsteps=params['config']['nsteps']).save()
         #data = json.dumps(data, sort_keys=True)
-        for item in data:           
+        #for item in data:  #if "data":{...} not nested inside params          
+        for item in params['data']:           
            # print(item, data_sorted[item])
             column=str(count).zfill(3)
             pref_dbm="v"
@@ -353,7 +368,7 @@ class pawscFunction:
             field_config=pref_config+column #dynamically define field name i.e. f000, f001, f002, ..., f**n
             #dataset.append(field_dbm +'='+ data[item])       
             #Notifyspectrumusedbmdata(**{field: data[item]})
-            Notifyspectrumusedbmdata.objects.filter(id=next_rec_dbm).update(**{field_dbm: data[item]}) #populate the record
+            Notifyspectrumusedbmdata.objects.filter(id=next_rec_dbm).update(**{field_dbm: params['data'][item]}) #populate the record
             Notifyspectrumuseconfig.objects.filter(id=next_rec_config).update(**{field_config: item})
             count += 1
         #Notifyspectrumusedbmdata(v000=12, v001=2, v002=4, v003=10, v004=6, v005=8).save()
