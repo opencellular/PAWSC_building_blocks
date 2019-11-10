@@ -326,51 +326,54 @@ class pawscFunction:
         
         return spec_resp
     
-    @transaction.atomic #commit once, instead at each save()
+    @transaction.atomic #commit once, instead of at each save()
     def scan_data_resp(self, params):
         #pair1=data['3.3']
         #print('pair1: ', pair1)
-        count=0
-        if( len(Notifyspectrumusedbmdata.objects.all()) == 0):
-            next_rec_dbm=1
-        else:
-            next_rec_dbm=Notifyspectrumusedbmdata.objects.last().id + 1
-        if(len(Notifyspectrumuseconfig.objects.all()) == 0):
-            next_rec_config=1
-        else:
-            next_rec_config=Notifyspectrumuseconfig.objects.last().id + 1
-       
-        Notifyspectrumusedbmdata(id=next_rec_dbm,
-                                 created_at = params['info']['time'],
-                                 config_id = next_rec_config,
-                                 min = params['info']['min'],
-                                 max = params['info']['max'],
-                                 med = params['info']['med'],                               
-                                 nsteps =  params['info']['nsteps'],
-                                 ).save() #enter new empty record
-        
-        Notifyspectrumuseconfig(id=next_rec_config, 
-                                created_at=params['config']['created_at'], #date and time scan started
-                                campaign_id=params['config']['campaign_id'],
-                                start_freq=params['config']['start_freq'],
-                                end_freq=params['config']['end_freq'],
-                                amp_top=params['config']['amp_top'],
-                                amp_bottom=params['config']['amp_bottom'],
-                                nsteps=params['config']['nsteps']).save()
-        #data = json.dumps(data, sort_keys=True)
-        #for item in data:  #if "data":{...} not nested inside params          
-        for item in params['data']:           
-           # print(item, data_sorted[item])
-            column=str(count).zfill(3)
-            pref_dbm="v"
-            pref_config="f"
-            field_dbm = pref_dbm+column #dynamically define field name i.e. v000, v001, v002, ..., v**n
-            field_config=pref_config+column #dynamically define field name i.e. f000, f001, f002, ..., f**n
-            #dataset.append(field_dbm +'='+ data[item])       
-            #Notifyspectrumusedbmdata(**{field: data[item]})
-            Notifyspectrumusedbmdata.objects.filter(id=next_rec_dbm).update(**{field_dbm: params['data'][item]}) #populate the record
-            Notifyspectrumuseconfig.objects.filter(id=next_rec_config).update(**{field_config: item})
-            count += 1
+        for data_list in params['scanData']:
+            count=0
+            if( len(Notifyspectrumusedbmdata.objects.all()) == 0):
+                next_rec_dbm=1
+            else:
+                next_rec_dbm=Notifyspectrumusedbmdata.objects.last().id + 1
+            if(len(Notifyspectrumuseconfig.objects.all()) == 0):
+                next_rec_config=1
+            else:
+                next_rec_config=Notifyspectrumuseconfig.objects.last().id + 1
+           
+            Notifyspectrumusedbmdata(id=next_rec_dbm,
+                                     created_at = params['scanInfo']['time'],
+                                     config_id = next_rec_config,
+                                     min = params['scanInfo']['min'],
+                                     max = params['scanInfo']['max'],
+                                     med = params['scanInfo']['med'],                               
+                                     nsteps =  params['scanInfo']['nsteps'],
+                                     ).save() #enter new empty record
+            
+            Notifyspectrumuseconfig(id=next_rec_config, 
+                                    created_at=params['config']['created_at'], #date and time scan started
+                                    campaign_id=params['config']['campaign_id'],
+                                    start_freq=params['config']['start_freq'],
+                                    end_freq=params['config']['end_freq'],
+                                    amp_top=params['config']['amp_top'],
+                                    amp_bottom=params['config']['amp_bottom'],
+                                    nsteps=params['config']['nsteps']).save()
+            #data = json.dumps(data, sort_keys=True)
+            #for item in data:  #if "data":{...} not nested inside params          
+        #for data_list in params['scanData']:
+            for item in data_list['scanDataList']:
+                # print(item, data_sorted[item])
+                column=str(count).zfill(3)
+                pref_dbm="v"
+                pref_config="f"
+                field_dbm = pref_dbm+column #dynamically define field name i.e. v000, v001, v002, ..., v**n
+                field_config=pref_config+column #dynamically define field name i.e. f000, f001, f002, ..., f**n
+                #dataset.append(field_dbm +'='+ data[item])       
+                #Notifyspectrumusedbmdata(**{field: data[item]})
+                Notifyspectrumusedbmdata.objects.filter(id=next_rec_dbm).update(**{field_dbm: data_list['scanDataList'][item]}) #populate the record
+                count += 1
+                Notifyspectrumuseconfig.objects.filter(id=next_rec_config).update(**{field_config: item})
+                
         #Notifyspectrumusedbmdata(v000=12, v001=2, v002=4, v003=10, v004=6, v005=8).save()
         #print(dataset)
         #print(str(dataset).strip("[''], ''"))
@@ -382,11 +385,20 @@ class pawscFunction:
         
         #Assume data successfully uploaded:
         scan_data_resp = {
-             "type": "SCAN_DATA_RESP",
-             "Ack":{"code": "000", "message":"Spectrum scan data successfully uploaded"}
-        }        
-       
-            
+             "type": "SCAN_DATA_RESP",             
+             "reportingInterval":"xx",
+             "ScanInformation":{
+                 "sampleRate":"xx",
+                 "dwellTime":"xx",
+                 "windowType":"zzz",
+                 "detector":"zzz",
+                 "statistics":"zzz",
+                 "startFreq":"xxx",
+                 "stopFreq":"xxx",
+                 "fftsize":"xxx"
+             },
+             "Ack":{"code": "000", "status":"Spectrum scan data successfully uploaded"}
+        }            
             
                 
        
